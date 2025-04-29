@@ -6,6 +6,7 @@ use Core\Controller;
 use Core\Validator;
 use Core\Auth;
 use Core\Database;
+use Core\Env;
 use Exception;
 
 class ProductController extends Controller
@@ -49,7 +50,11 @@ class ProductController extends Controller
                 'description' => $_POST['description']
             ]);
             $db->commit();
-            echo json_encode(['status' => 'success', 'message' => 'Produk berhasil disimpan.']);
+            echo json_encode([
+                'status' => 'success', 
+                'message' => 'Produk berhasil disimpan.',
+                'redirect' => Env::get('BASE_URL') . '/products'
+            ], JSON_UNESCAPED_SLASHES);
         } catch (Exception $e) {
             $db->rollBack();
             http_response_code(500);

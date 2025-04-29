@@ -1,5 +1,5 @@
 {
-    "name": "azzak/cmip2",
+    "name": "azzak/cmip",
     "description": "tes",
     "autoload": {
         "psr-4": {

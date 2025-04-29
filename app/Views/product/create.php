@@ -19,20 +19,35 @@ use Core\Env;
 
         $('#form').on('submit', function(e) {
             e.preventDefault();
-// alert('asd');
+
             $.ajax({
-                url: 'http://localhost/cmip2/products/store',
+                url: '<?= Env::get('BASE_URL') ?>/products/store',
                 method: 'POST',
                 data: $(this).serialize(),
+                dataType: 'json',
+                ajaxStart: function() {
+                    $('#overlay').fadeIn(100);
+                },
+                ajaxStop: function() {
+                    $('#overlay').fadeOut(100);
+                },
                 success: function(res) {
-                    toastr.success(res.message);
-                    $('#modalForm').modal('hide');
-                    $('#form-product')[0].reset();
-                    table.ajax.reload();
+                    Toast.fire({
+                        icon: "success",
+                        title: res.message
+                    });
+                    window.location.href = res.redirect;
+                    
+                    // $('#modalForm').modal('hide');
+                    // $('#form-product')[0].reset();
+                    // table.ajax.reload();
                 },
                 error: function(xhr) {
                     const err = JSON.parse(xhr.responseText);
-                    toastr.error(err.message);
+                    Toast.fire({
+                        icon: "warning",
+                        title: err.message
+                    });
                 }
             });
         });

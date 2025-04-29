@@ -8,8 +8,7 @@ class Router
     public function run()
     {
         session_start();
-        
-        require_once APP_PATH . '/../routes/web.php';
+        require_once ROOT_PATH . 'routes/web.php';
         $router->dispatch();
     }
 
