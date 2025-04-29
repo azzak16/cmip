@@ -2,7 +2,7 @@
 
 namespace Core;
 
-use Database;
+use Core\Database;
 use PDO;
 use PDOException;
 
@@ -13,7 +13,7 @@ abstract class Model
 
     public function __construct()
     {
-        $this->db = Database::connect();
+        $this->db = Database::getInstance();
     }
 
     public function find($id)
@@ -27,6 +27,9 @@ abstract class Model
     {
         $columns = implode(',', array_keys($data));
         $placeholders = ':' . implode(', :', array_keys($data));
+
+        print_r($columns);die();
+
         $stmt = $this->db->prepare("INSERT INTO {$this->table} ($columns) VALUES ($placeholders)");
         return $stmt->execute($data);
     }

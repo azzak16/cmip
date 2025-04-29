@@ -5,6 +5,7 @@ use App\Models\Product;
 use Core\Controller;
 use Core\Validator;
 use Core\Auth;
+use Core\Database;
 use Exception;
 
 class ProductController extends Controller
@@ -28,6 +29,9 @@ class ProductController extends Controller
 
     public function store()
     {
+        $db = Database::getInstance();
+        $db->beginTransaction();
+
         try {
             $errors = Validator::validate($_POST, [
                 'name' => 'required|min:3',
@@ -44,9 +48,10 @@ class ProductController extends Controller
                 'name' => $_POST['name'],
                 'description' => $_POST['description']
             ]);
-
+            $db->commit();
             echo json_encode(['status' => 'success', 'message' => 'Produk berhasil disimpan.']);
         } catch (Exception $e) {
+            $db->rollBack();
             http_response_code(500);
             echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
         }
