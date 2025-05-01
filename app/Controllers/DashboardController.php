@@ -13,6 +13,6 @@ class DashboardController extends Controller
         // }
         
 
-        $this->view('Dashboard/index', ['title' => 'Dashboard'], 'layouts/main');
+        $this->view('Dashboard/index', ['title' => 'Dashboard']);
     }
 }

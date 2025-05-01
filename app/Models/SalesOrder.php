@@ -4,9 +4,9 @@ namespace App\Models;
 use Core\Model;
 use PDO;
 
-class Product extends Model
+class SalesOrder extends Model
 {
-    protected $table = 'products';
+    protected $table = 'sales_orders';
 
     // public function __construct()
     // {

@@ -14,7 +14,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="/products" class="nav-link text-white">
+            <a href="<?= \Core\Env::get('BASE_URL') ?>/sales-order" class="nav-link text-white">
                 <i class="fas fa-box"></i> <span class="menu-text">Saless Order</span>
             </a>
         </li>

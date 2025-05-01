@@ -31,6 +31,7 @@ $user = Auth::user();
         .content {
             margin-left: 250px;
             transition: all 0.3s;
+            background-color: #f8f9fa;
         }
         .content.collapsed {
             margin-left: 80px;
@@ -39,6 +40,14 @@ $user = Auth::user();
         #overlay {
             display: flex;
             transition: opacity 0.3s ease;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(255,255,255,0.7);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
         }
 
     </style>
@@ -50,21 +59,12 @@ $user = Auth::user();
 
 <div class="content" id="mainContent">
     <?php include __DIR__ . '/navbar.php'; ?>
-    <div class="container-fluid mt-3">
+    <!-- <div class="container-fluid mt-3"> -->
         <?= $content ?? '' ?>
-    </div>
+    <!-- </div> -->
 </div>
 
-<div id="overlay" style="
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(255,255,255,0.7);
-    z-index: 9999;
-    display: none;
-    align-items: center;
-    justify-content: center;
-">
+<div id="overlay">
     <div class="spinner-border text-primary" role="status">
         <span class="sr-only">Loading...</span>
     </div>

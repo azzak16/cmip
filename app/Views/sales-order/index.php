@@ -3,7 +3,7 @@
 use Core\Env;
 ?>
 
-<a href="<?= \Core\Env::get('BASE_URL') ?>/products/create" class="btn btn-primary mb-3">+ Tambah Produk</a>
+<a href="<?= \Core\Env::get('BASE_URL') ?>/sales-order/create" class="btn btn-primary mb-3">+ Tambah Sales Order</a>
 
 <table class="table table-bordered" id="table-product">
     <thead>
@@ -17,7 +17,7 @@ use Core\Env;
 
 <script>
     var datatable = $('#table-product').DataTable({
-        ajax: '<?= Env::get('BASE_URL') ?>/products/data',
+        ajax: '<?= Env::get('BASE_URL') ?>/sales-order/data',
         columns: [{
                 data: 'name'
             },
@@ -32,7 +32,7 @@ use Core\Env;
                 render: function(data, type, row, meta) {
 
                     var html = `<div>
-                                    <a href="<?= Env::get('BASE_URL') ?>/products/edit/${row.id}" class="btn btn-sm btn-info btn-edit" >Edit</a>
+                                    <a href="<?= Env::get('BASE_URL') ?>/sales-order/edit/${row.id}" class="btn btn-sm btn-info btn-edit" >Edit</a>
                                     <a class="btn btn-sm btn-danger btn-delete" data-id="${row.id}">Delete</a>
                                 </div>`;
 
@@ -44,7 +44,7 @@ use Core\Env;
 
     // $('#table-product').on('click', '.btn-edit', function() {
     //     var id = $(this).data('id');
-    //     $.get(`<?= Env::get('BASE_URL') ?>/products/edit/${id}`, function(res) {
+    //     $.get(`<?= Env::get('BASE_URL') ?>/sales-order/edit/${id}`, function(res) {
     //         $('[name="id"]').val(res.id);
     //         $('[name="name"]').val(res.name);
     //         $('[name="price"]').val(res.price);
@@ -60,7 +60,7 @@ use Core\Env;
         if (confirm('Yakin hapus produk ini?')) {
 
             $.ajax({
-                url: `<?= Env::get('BASE_URL') ?>/products/delete/${id}`,
+                url: `<?= Env::get('BASE_URL') ?>/sales-order/delete/${id}`,
                 method: 'POST',
                 data: $(this).serialize(),
                 dataType: 'json',

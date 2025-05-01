@@ -50,6 +50,12 @@ abstract class Model
         return $stmt->execute(['id' => $id]);
     }
 
+    public function softDelete($id)
+    {
+        $stmt = $this->db->prepare("UPDATE {$this->table} SET deleted_at = NOW() WHERE id = :id");
+        return $stmt->execute(['id' => $id]);
+    }
+
     public function all()
     {
         $stmt = $this->db->query("SELECT * FROM {$this->table} WHERE deleted_at IS NULL");

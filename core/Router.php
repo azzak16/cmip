@@ -34,16 +34,31 @@ class Router
         $segment = explode('/', $segment);
 
         $uri = '/' . trim(str_replace($segment[0], '', $uri), '/');
-
-        $callback = $this->routes[$method][$uri] ?? null;
-
-        if ($callback) {
-            [$controller, $method] = $callback;
-            $controller = new $controller();
-            call_user_func([$controller, $method]);
-        } else {
-            http_response_code(404);
-            echo "404 Not Found";
+        
+        foreach ($this->routes[$method] as $route => $callback) {
+            $pattern = preg_replace('/\{[^\}]+\}/', '([^/]+)', $route);
+            $pattern = '#^' . $pattern . '$#';
+        
+            if (preg_match($pattern, $uri, $matches)) {
+                array_shift($matches); // remove full match
+                [$controller, $action] = $callback;
+                $controller = new $controller();
+                call_user_func_array([$controller, $action], $matches);
+                return;
+            }
         }
+        
+
+        // $callback = $this->routes[$method][$uri] ?? null;
+
+
+        // if ($callback) {
+        //     [$controller, $method] = $callback;
+        //     $controller = new $controller();
+        //     call_user_func([$controller, $method]);
+        // } else {
+        //     http_response_code(404);
+        //     echo "404 Not Found";
+        // }
     }
 }
