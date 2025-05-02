@@ -19,7 +19,7 @@ $user = Auth::user();
             transition: all 0.3s;
         }
         .sidebar.collapsed {
-            width: 80px;
+            width: 60px;
         }
         .sidebar .menu-text {
             display: inline;
@@ -34,7 +34,7 @@ $user = Auth::user();
             background-color: #f8f9fa;
         }
         .content.collapsed {
-            margin-left: 80px;
+            margin-left: 60px;
         }
 
         #overlay {

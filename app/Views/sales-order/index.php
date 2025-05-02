@@ -3,29 +3,32 @@
 use Core\Env;
 ?>
 
-<a href="<?= \Core\Env::get('BASE_URL') ?>/sales-order/create" class="btn btn-primary mb-3">+ Tambah Sales Order</a>
-
-<table class="table table-bordered" id="table-product">
-    <thead>
-        <tr>
-            <th>Nama</th>
-            <th>Deskripsi</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
-</table>
+<div class="m-3">
+    <a href="<?= \Core\Env::get('BASE_URL') ?>/sales-order/create" class="btn btn-primary mb-3">+ Tambah Sales Order</a>
+    
+    <table class="table table-bordered" id="table-product">
+        <thead>
+            <tr>
+                <th>Nama Customer</th>
+                <th>Kode Produksi</th>
+                <th>Nomer Order</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+    </table>
+</div>
 
 <script>
     var datatable = $('#table-product').DataTable({
         ajax: '<?= Env::get('BASE_URL') ?>/sales-order/data',
         columns: [{
-                data: 'name'
+                data: 'customer_name'
             },
             {
-                data: 'category_id'
+                data: 'production_code'
             },
             {
-                data: 'description'
+                data: 'order_number'
             },
             {
                 data: 'id',
@@ -34,6 +37,7 @@ use Core\Env;
                     var html = `<div>
                                     <a href="<?= Env::get('BASE_URL') ?>/sales-order/edit/${row.id}" class="btn btn-sm btn-info btn-edit" >Edit</a>
                                     <a class="btn btn-sm btn-danger btn-delete" data-id="${row.id}">Delete</a>
+                                    <a href="<?= Env::get('BASE_URL') ?>/sales-order/print/${row.id}" target="_blank" class="btn btn-sm btn-primary">Print</a>
                                 </div>`;
 
                     return html;

@@ -35,5 +35,6 @@ $router->get('/sales-order/create', [SalesOrderController::class, 'create']);
 $router->post('/sales-order/store', [SalesOrderController::class, 'store']);
 $router->get('/sales-order/data', [SalesOrderController::class, 'data']);
 $router->get('/sales-order/edit/{id}', [SalesOrderController::class, 'edit']);
+$router->get('/sales-order/print/{id}', [SalesOrderController::class, 'print']);
 $router->post('/sales-order/update/{id}', [SalesOrderController::class, 'update']);
 $router->post('/sales-order/delete/{id}', [SalesOrderController::class, 'delete']);

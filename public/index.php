@@ -1,6 +1,7 @@
 <?php
 
 define('APP_PATH', realpath(__DIR__ . '/../app/') . '/');
+define('PUBLIC_PATH', realpath(__DIR__ . '/../public/') . '/');
 define('ROOT_PATH', realpath(__DIR__ . '/../') . '/');
 
 require_once __DIR__ . '/../vendor/autoload.php';

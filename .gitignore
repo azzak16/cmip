@@ -1,0 +1,42 @@
+# Composer vendor
+/vendor/
+
+# Environment files
+.env
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Log files
+/storage/logs/
+*.log
+
+# Cache and temporary files
+/tmp/
+temp/
+cache/
+
+# IDE/editor folders
+/.idea/
+/.vscode/
+/nbproject/
+
+# Node modules (if using frontend tools)
+/node_modules/
+
+# Build or dist directories (if any)
+/dist/
+/build/
+
+# OS swap or backup files
+*.swp
+*.bak
+*.tmp
+
+# PHPUnit or test coverage (if using tests)
+/coverage/
+/phpunit.xml
+
+# mPDF temp folder (if relocated)
+storage/tmp/

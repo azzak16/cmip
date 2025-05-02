@@ -13,5 +13,7 @@
             "email": "anggazakaria16@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "mpdf/mpdf": "8.0.4"
+    }
 }

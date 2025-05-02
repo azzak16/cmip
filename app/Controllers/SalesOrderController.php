@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Models\Product;
 use App\Models\SalesOrder;
+use App\Models\SalesOrderItem;
 use Core\Controller;
 use Core\Validator;
 use Core\Auth;
@@ -44,39 +45,42 @@ class SalesOrderController extends Controller
 
     public function store()
     {
+
         $db = Database::getInstance();
         $db->beginTransaction();
 
         try {
-            $errors = Validator::validate($_POST, [
-                'name' => 'required|min:3',
-                'description' => 'required'
-            ]);
-
-            if ($errors) {
-                throw new \Exception(json_encode($errors));
-            }
 
             $model = new SalesOrder();
-            $model->insert([
+            $so_id = $model->insert([
                 // 'tenant_id' => Auth::user()['tenant_id'],
-                'name' => $_POST['name'],
-                'description' => $_POST['description']
+                'customer_name' => $_POST['customer_name'],
+                'customer_code' => $_POST['customer_code'],
+                'customer_address' => $_POST['customer_address'],
+                'production_code' => $_POST['production_code'],
+                'order_number' => $_POST['order_number'],
+                'order_date' => $_POST['order_date'],
+                'payment_terms' => $_POST['payment_terms'],
+                'delivery_plan' => $_POST['delivery_plan'],
+                'manager_production' => $_POST['manager_production'],
+                'ppic' => $_POST['ppic'],
+                'head_sales' => $_POST['head_sales'],
+                'order_recipient' => $_POST['order_recipient'],
             ]);
 
-            // Upload multiple files
-            // foreach ($files['images']['tmp_name'] as $i => $tmp) {
-            //     if ($tmp === '') continue;
-
-            //     $filename = time() . '_' . basename($files['images']['name'][$i]);
-            //     $dest = __DIR__ . '/../../public/uploads/sales-order/' . $filename;
-
-            //     if (!move_uploaded_file($tmp, $dest)) {
-            //         throw new Exception("Gagal upload gambar.");
-            //     }
-
-            //     $this->model->addImage($productId, $filename);
-            // }
+            foreach ($_POST['product_name'] as $key => $value) {
+                $model_item = new SalesOrderItem();
+                $model_item->insert([
+                    'sales_order_id' => $so_id,
+                    'product_name' => $_POST['product_name'][$key],
+                    'color' => $_POST['color'][$key],
+                    'karat' => $_POST['karat'][$key],
+                    'pcs' => $_POST['pcs'][$key],
+                    'pairs' => $_POST['pairs'][$key],
+                    'gram' => $_POST['gram'][$key],
+                    'note' => $_POST['note'][$key],
+                ]);
+            }
 
             $db->commit();
             echo json_encode([
@@ -99,6 +103,15 @@ class SalesOrderController extends Controller
 
         $this->view('sales-order/edit', ['title' => 'Edit Sales Order', 'Sales Order' => $product], 'layouts/main');
     }
+
+    public function print($id)
+    {
+        $model = new SalesOrder();
+        $product = $model->find($id);
+
+        $this->view('sales-order/print', ['title' => 'Edit Sales Order', 'Sales Order' => $product], 'layouts/main');
+    }
+    
 
     public function update($id)
     {

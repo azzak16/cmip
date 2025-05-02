@@ -29,7 +29,9 @@ abstract class Model
         $placeholders = ':' . implode(', :', array_keys($data));
 
         $stmt = $this->db->prepare("INSERT INTO {$this->table} ($columns) VALUES ($placeholders)");
-        return $stmt->execute($data);
+        $stmt->execute($data);
+
+        return $this->db->lastInsertId();
     }
 
     public function update($id, array $data)
