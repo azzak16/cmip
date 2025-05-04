@@ -3,14 +3,14 @@
 use Core\Env;
 ?>
 
-<style>
+<!-- <style>
     input[type=text]:focus {
         width: 100%;
     }
 
-    table {
+    /* table {
         table-layout: fixed;
-    }
+    } */
 
     table th {
         color: black;
@@ -50,10 +50,10 @@ use Core\Env;
         overflow-y: auto;
     }
 
-    #datatable td {
+    /* #datatable td {
         padding: 2px !important;
-        /* vertical-align: middle; */
-    }
+        vertical-align: middle;
+    } */
 
     .table-scrollable {
         margin: 0;
@@ -150,7 +150,7 @@ use Core\Env;
     }
 
     /* BATAS SWEETALERT */
-</style>
+</style> -->
 
 <form id="form" method="post">
     <div class="card m-3">
@@ -232,7 +232,7 @@ use Core\Env;
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive scrollable">
-                        <table id="datatable" class="table table-scrollable">
+                        <table id="datatable" class="table table-sm table-scrollable">
                             <thead>
                                 <tr>
                                     <th width="100px">Nama Barang</th>

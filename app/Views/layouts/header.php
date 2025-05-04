@@ -3,6 +3,7 @@
 use Core\Env;
 ?>
 
+<link rel="stylesheet" href="<?= Env::get('BASE_URL') ?>/public/css/style.css">
 <link rel="stylesheet" href="<?= Env::get('BASE_URL') ?>/public/assets/bootstrap-4/css/bootstrap.min.css">
 <link rel="stylesheet" href="<?= Env::get('BASE_URL') ?>/public/assets/fontawesome-6/css/all.min.css">
 <link rel="stylesheet" href="<?= Env::get('BASE_URL') ?>/public/assets/sweetalert2/dist/sweetalert2.min.css">
@@ -10,6 +11,7 @@ use Core\Env;
 
 
 
+<script src="<?= Env::get('BASE_URL') ?>/public/js/app.js"></script>
 <script src="<?= Env::get('BASE_URL') ?>/public/assets/jquery/jquery-3.7.1.min.js"></script>
 <script src="<?= Env::get('BASE_URL') ?>/public/assets/bootstrap-4/js/bootstrap.bundle.min.js"></script>
 <script src="<?= Env::get('BASE_URL') ?>/public/assets/DataTables/datatables.min.js"></script>

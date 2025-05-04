@@ -1,11 +1,11 @@
 <?php
 
 use App\Controllers\AuthController;
+use App\Controllers\CustomerController;
 use App\Controllers\DashboardController;
 use App\Controllers\HomeController;
 use App\Controllers\ProductController;
 use App\Controllers\SalesOrderController;
-use App\Models\SalesOrder;
 use Core\Router;
 
 $router = new Router();
@@ -28,6 +28,15 @@ $router->get('/products/edit/{id}', [ProductController::class, 'edit']);
 $router->post('/products/update/{id}', [ProductController::class, 'update']);
 $router->post('/products/delete/{id}', [ProductController::class, 'delete']);
 // $router->post('/products/delete/(\d+)', [ProductController::class, 'delete']);
+
+// customer
+$router->get('/customer', [CustomerController::class, 'index']);
+$router->get('/customer/create', [CustomerController::class, 'create']);
+$router->post('/customer/store', [CustomerController::class, 'store']);
+$router->get('/customer/data', [CustomerController::class, 'data']);
+$router->get('/customer/edit/{id}', [CustomerController::class, 'edit']);
+$router->post('/customer/update/{id}', [CustomerController::class, 'update']);
+$router->post('/customer/delete/{id}', [CustomerController::class, 'delete']);
 
 // sales order
 $router->get('/sales-order', [SalesOrderController::class, 'index']);
