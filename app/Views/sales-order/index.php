@@ -4,22 +4,34 @@ use Core\Env;
 ?>
 
 <div class="m-3">
-    <a href="<?= \Core\Env::get('BASE_URL') ?>/sales-order/create" class="btn btn-primary mb-3">+ Tambah Sales Order</a>
-    
-    <table class="table table-bordered" id="table-product">
-        <thead>
-            <tr>
-                <th>Nama Customer</th>
-                <th>Kode Produksi</th>
-                <th>Nomer Order</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-    </table>
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title"><?= $data['title'] ?? 'Dashboard'; ?></h5>
+        </div>
+        <div class="card-body row">
+            <div class="col-md-12">
+                <a href="<?= \Core\Env::get('BASE_URL') ?>/sales-order/create" class="btn btn-primary btn-sm mb-3 float-right">+ Tambah</a>
+            </div>
+            
+            <div class="col-md-12">
+                <table class="table table-sm" id="datatable">
+                <thead>
+                    <tr>
+                        <th>Nama Customer</th>
+                        <th>Kode Produksi</th>
+                        <th>Nomer Order</th>
+                        <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    var datatable = $('#table-product').DataTable({
+    var datatable = $('#datatable').DataTable({
         ajax: '<?= Env::get('BASE_URL') ?>/sales-order/data',
         columns: [{
                 data: 'customer_name'
@@ -46,7 +58,7 @@ use Core\Env;
         ]
     });
 
-    // $('#table-product').on('click', '.btn-edit', function() {
+    // $('#datatable').on('click', '.btn-edit', function() {
     //     var id = $(this).data('id');
     //     $.get(`<?= Env::get('BASE_URL') ?>/sales-order/edit/${id}`, function(res) {
     //         $('[name="id"]').val(res.id);
@@ -59,7 +71,7 @@ use Core\Env;
     //     });
     // });
 
-    $('#table-product').on('click', '.btn-delete', function() {
+    $('#datatable').on('click', '.btn-delete', function() {
         const id = $(this).data('id');
         if (confirm('Yakin hapus produk ini?')) {
 

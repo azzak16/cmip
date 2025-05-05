@@ -1,5 +1,7 @@
 <?php
 use Core\Auth;
+use Core\Env;
+
 $user = Auth::user();
 ?>
 <!DOCTYPE html>
@@ -8,12 +10,13 @@ $user = Auth::user();
     <meta charset="UTF-8">
     <title><?= $title ?? 'Dashboard'; ?></title>
     <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
-    <link rel="stylesheet" href="/assets/style.css">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> -->
+    <?= $this->view('layouts/header') ?>
+    <link rel="stylesheet" href="<?= Env::get('BASE_URL') ?>/css/style.css">
+
     <style>
 
     </style>
-    <?= $this->view('layouts/header') ?>
 </head>
 <body>
 
@@ -32,11 +35,11 @@ $user = Auth::user();
     </div>
 </div>
 
+<script src="<?= Env::get('BASE_URL') ?>/js/app.js"></script>
 
 <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script> -->
 <script>
-
 </script>
 
 </body>

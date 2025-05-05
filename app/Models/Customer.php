@@ -15,7 +15,7 @@ class Customer extends Model
 
     public function all()
     {
-        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE deleted_at IS NULL");
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table}");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

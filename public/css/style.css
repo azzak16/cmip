@@ -1,6 +1,5 @@
 body {
     overflow-x: hidden;
-    background-color: red;
 }
 .sidebar {
     width: 250px;
@@ -40,6 +39,10 @@ body {
 
 input[type=text]:focus {
     width: 100%;
+}
+
+.form-group {
+    margin-bottom: 0;
 }
 
 /* table {

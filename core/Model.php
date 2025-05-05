@@ -16,10 +16,14 @@ abstract class Model
         $this->db = Database::getInstance();
     }
 
-    public function find($id)
+    public function find($id, $type = 'id', $soft_delete = true)
     {
-        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE id = :id AND deleted_at IS NULL");
-        $stmt->execute(['id' => $id]);
+        if ($soft_delete) {
+            $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE $type = :$type AND deleted_at IS NULL");
+        } else {
+            $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE $type = :$type");
+        }
+        $stmt->execute(["$type" => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -34,22 +38,22 @@ abstract class Model
         return $this->db->lastInsertId();
     }
 
-    public function update($id, array $data)
+    public function update($id, array $data, $type = 'id')
     {
         $fields = '';
         foreach ($data as $key => $val) {
             $fields .= "$key = :$key, ";
         }
         $fields = rtrim($fields, ', ');
-        $data['id'] = $id;
-        $stmt = $this->db->prepare("UPDATE {$this->table} SET $fields WHERE id = :id");
+        $data["$type"] = $id;
+        $stmt = $this->db->prepare("UPDATE {$this->table} SET $fields WHERE $type = :$type");
         return $stmt->execute($data);
     }
 
-    public function delete($id)
+    public function delete($id, $type = 'id')
     {
-        $stmt = $this->db->prepare("DELETE FROM {$this->table} WHERE id = :id");
-        return $stmt->execute(['id' => $id]);
+        $stmt = $this->db->prepare("DELETE FROM {$this->table} WHERE $type = :$type");
+        return $stmt->execute(["$type" => $id]);
     }
 
     public function softDelete($id)
@@ -64,10 +68,17 @@ abstract class Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function count()
+    {
+        $stmt = $this->db->query("SELECT count(*) FROM {$this->table}");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function raw($query, $params = [])
     {
         $stmt = $this->db->prepare($query);
         $stmt->execute($params);
         return $stmt;
     }
+
 }

@@ -8,6 +8,7 @@ use Core\Auth;
 use Core\Database;
 use Core\Env;
 use Exception;
+use PDO;
 
 class CustomerController extends Controller
 {
@@ -35,14 +36,51 @@ class CustomerController extends Controller
 
     public function data()
     {
-        $model = new Product();
-        $products = $model->all();
-        echo json_encode(['data' => $products]);
+        $customers = $this->customer->all();
+        echo json_encode(['data' => $customers]);
+    }
+
+    public function select()
+    {
+        $search = $_GET['search'] ?? '';
+        $page = (int)($_GET['page'] ?? 1);
+        if ($page == 0) {
+            $xa = 0;
+        } else {
+            $xa = ($page - 1) * 10;
+        }
+        $perPage = 10;
+
+        // $search, $xa, $perPage
+
+        $results = $this->customer->raw("SELECT *
+                FROM customers
+                WHERE AKTIF = 1
+                AND CS_NAMA LIKE '%$search%'
+                AND CS_NAMA != ''
+                ORDER BY CS_NAMA LIMIT $xa,$perPage");
+
+        $items = $results->fetchAll(PDO::FETCH_ASSOC);
+
+        $selectajax = [];
+        foreach ($items as $row) {
+            $selectajax[] = array(
+                'NO_ID' => $row['NO_ID'],
+                'text' => $row['CS_NAMA'],
+            );
+        }
+        $select['total_count'] =  $results->fetchColumn();
+        $select['items'] = $selectajax;
+
+        // print_r($select);
+        // die();
+
+        echo json_encode($select);
     }
 
     public function create()
     {
-        $this->view('product/create', ['title' => 'Tambah Produk'], 'layouts/main');
+        $this->view('customer/create', $this->data, 'layouts/main');
     }
 
     public function store()
@@ -51,41 +89,21 @@ class CustomerController extends Controller
         $db->beginTransaction();
 
         try {
-            $errors = Validator::validate($_POST, [
-                'name' => 'required|min:3',
-                'description' => 'required'
-            ]);
 
-            if ($errors) {
-                throw new \Exception(json_encode($errors));
-            }
-
-            $model = new Product();
-            $model->insert([
+            $this->customer->insert([
                 // 'tenant_id' => Auth::user()['tenant_id'],
-                'name' => $_POST['name'],
-                'description' => $_POST['description']
-            ]);
-
-            // Upload multiple files
-            // foreach ($files['images']['tmp_name'] as $i => $tmp) {
-            //     if ($tmp === '') continue;
-
-            //     $filename = time() . '_' . basename($files['images']['name'][$i]);
-            //     $dest = __DIR__ . '/../../public/uploads/products/' . $filename;
-
-            //     if (!move_uploaded_file($tmp, $dest)) {
-            //         throw new Exception("Gagal upload gambar.");
-            //     }
-
-            //     $this->model->addImage($productId, $filename);
-            // }
+                'CS_NAMA' => $_POST['CS_NAMA'],
+                'CS_KODE' => $_POST['CS_KODE'],
+                'CS_ALAMAT' => $_POST['CS_ALAMAT'],
+                'NOTES' => $_POST['NOTES'],
+                'AKTIF' => 1,
+            ], 'NO_ID');
 
             $db->commit();
             echo json_encode([
                 'status' => true, 
-                'message' => 'Produk berhasil disimpan.',
-                'redirect' => Env::get('BASE_URL') . '/products'
+                'message' => 'Customer berhasil disimpan.',
+                'redirect' => Env::get('BASE_URL') . '/customer'
             ], JSON_UNESCAPED_SLASHES);
 
         } catch (Exception $e) {
@@ -97,10 +115,9 @@ class CustomerController extends Controller
 
     public function edit($id)
     {
-        $model = new Product();
-        $product = $model->find($id);
+        $this->data['customer'] = $this->customer->find($id, 'NO_ID', FALSE);
 
-        $this->view('product/edit', ['title' => 'Edit Produk', 'product' => $product], 'layouts/main');
+        $this->view('customer/edit', $this->data, 'layouts/main');
     }
 
     public function update($id)
@@ -109,26 +126,19 @@ class CustomerController extends Controller
         $db->beginTransaction();
 
         try {
-            $errors = Validator::validate($_POST, [
-                'name' => 'required|min:3',
-                'description' => 'required'
-            ]);
 
-            if ($errors) {
-                throw new \Exception(json_encode($errors));
-            }
-
-            $model = new Product();
-            $model->update($id, [
-                'name' => $_POST['name'],
-                'description' => $_POST['description']
-            ]);
+            $this->customer->update($id, [
+                'CS_NAMA' => $_POST['CS_NAMA'],
+                'CS_KODE' => $_POST['CS_KODE'],
+                'CS_ALAMAT' => $_POST['CS_ALAMAT'],
+                'NOTES' => $_POST['NOTES'],
+            ], 'NO_ID');
 
             $db->commit();
             echo json_encode([
                 'status' => true, 
-                'message' => 'Produk berhasil dirubah.',
-                'redirect' => Env::get('BASE_URL') . '/products'
+                'message' => 'Customer berhasil dirubah.',
+                'redirect' => Env::get('BASE_URL') . '/customer'
             ], JSON_UNESCAPED_SLASHES);
 
         } catch (Exception $e) {
@@ -142,7 +152,7 @@ class CustomerController extends Controller
     // {
     //     try {
     //         $this->service->deleteProduct($id);
-    //         echo json_encode(['success' => true, 'message' => 'Produk dihapus.']);
+    //         echo json_encode(['success' => true, 'message' => 'customer dihapus.']);
     //     } catch (Exception $e) {
     //         http_response_code(500);
     //         echo json_encode(['success' => false, 'message' => $e->getMessage()]);
@@ -152,9 +162,8 @@ class CustomerController extends Controller
     public function delete($id)
     {
         try {
-            $model = new Product();
-            $model->softDelete($id);
-            echo json_encode(['status' => true, 'message' => 'Produk dihapus']);
+            $this->customer->delete($id, 'NO_ID');
+            echo json_encode(['status' => true, 'message' => 'Customer dihapus']);
         } catch (Exception $e) {
             http_response_code(500);
             echo json_encode(['status' => false, 'message' => $e->getMessage()]);

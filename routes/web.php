@@ -34,6 +34,7 @@ $router->get('/customer', [CustomerController::class, 'index']);
 $router->get('/customer/create', [CustomerController::class, 'create']);
 $router->post('/customer/store', [CustomerController::class, 'store']);
 $router->get('/customer/data', [CustomerController::class, 'data']);
+$router->get('/customer/select', [CustomerController::class, 'select']);
 $router->get('/customer/edit/{id}', [CustomerController::class, 'edit']);
 $router->post('/customer/update/{id}', [CustomerController::class, 'update']);
 $router->post('/customer/delete/{id}', [CustomerController::class, 'delete']);

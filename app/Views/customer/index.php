@@ -9,15 +9,17 @@ use Core\Env;
         </div>
         <div class="card-body row">
             <div class="col-md-12">
-                <a href="<?= \Core\Env::get('BASE_URL') ?>/products/create" class="btn btn-primary btn-sm mb-3 float-right">+ Tambah Produk</a>
+                <a href="<?= \Core\Env::get('BASE_URL') ?>/customer/create" class="btn btn-primary btn-sm mb-3 float-right">+ Tambah</a>
             </div>
             
             <div class="col-md-12">
-                <table class="table table-sm" id="table-product">
+                <table class="table table-sm" id="datatable">
                     <thead>
                         <tr>
-                            <th>Nama</th>
-                            <th>Deskripsi</th>
+                            <th>No</th>
+                            <th>Nama Customer</th>
+                            <th>Kode Customer</th>
+                            <th>Alamat Customer</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -29,16 +31,30 @@ use Core\Env;
 </div>
 
 <script>
-    var datatable = $('#table-product').DataTable({
-        ajax: '<?= Env::get('BASE_URL') ?>/products/data',
-        columns: [{
-                data: 'name'
+    var datatable = $('#datatable').DataTable({
+        ajax: '<?= Env::get('BASE_URL') ?>/customer/data',
+        order: [[2, 'desc']],
+        drawCallback: function(settings) {
+            var api = this.api();
+            api.column(0, { search: 'applied', order: 'applied', page: 'applied' }).nodes()
+                .each(function(cell, i) {
+                    cell.innerHTML = api.page.info().start + i + 1;
+                });
+        },
+        columns: [
+            {
+                data: null,
+                searchable: false,
+                orderable: false,
             },
             {
-                data: 'category_id'
+                data: 'CS_NAMA'
             },
             {
-                data: 'description'
+                data: 'CS_KODE'
+            },
+            {
+                data: 'CS_ALAMAT'
             },
             {
                 data: 'id',
@@ -46,8 +62,8 @@ use Core\Env;
                 render: function(data, type, row, meta) {
 
                     var html = `<div>
-                                    <a href="<?= Env::get('BASE_URL') ?>/products/edit/${row.id}" class="btn btn-sm btn-outline-info btn-edit" ><i class="fas fa-pencil"></i></a>
-                                    <a class="btn btn-sm btn-outline-danger btn-delete" data-id="${row.id}"><i class="fas fa-trash"></i></a>
+                                    <a href="<?= Env::get('BASE_URL') ?>/customer/edit/${row.NO_ID}" class="btn btn-sm btn-outline-info btn-edit" ><i class="fas fa-pencil"></i></a>
+                                    <a class="btn btn-sm btn-outline-danger btn-delete" data-id="${row.NO_ID}"><i class="fas fa-trash"></i></a>
                                 </div>`;
 
                     return html;
@@ -56,7 +72,8 @@ use Core\Env;
         ]
     });
 
-    // $('#table-product').on('click', '.btn-edit', function() {
+
+    // $('#datatable').on('click', '.btn-edit', function() {
     //     var id = $(this).data('id');
     //     $.get(`<?= Env::get('BASE_URL') ?>/products/edit/${id}`, function(res) {
     //         $('[name="id"]').val(res.id);
@@ -69,12 +86,12 @@ use Core\Env;
     //     });
     // });
 
-    $('#table-product').on('click', '.btn-delete', function() {
+    $('#datatable').on('click', '.btn-delete', function() {
         const id = $(this).data('id');
-        if (confirm('Yakin hapus produk ini?')) {
+        if (confirm('Yakin hapus customer ini?')) {
 
             $.ajax({
-                url: `<?= Env::get('BASE_URL') ?>/products/delete/${id}`,
+                url: `<?= Env::get('BASE_URL') ?>/customer/delete/${id}`,
                 method: 'POST',
                 data: $(this).serialize(),
                 dataType: 'json',

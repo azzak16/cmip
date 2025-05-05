@@ -3,165 +3,23 @@
 use Core\Env;
 ?>
 
-<!-- <style>
-    input[type=text]:focus {
-        width: 100%;
-    }
-
-    /* table {
-        table-layout: fixed;
-    } */
-
-    table th {
-        color: black;
-        /* text-align: center; */
-        font-size: 10px;
-    }
-
-    table td {
-        overflow: hidden;
-        font-size: 10px;
-    }
-
-    .label {
-        color: black;
-        font-weight: bold;
-        font-size: 10px;
-    }
-
-    .rightJustified {
-        text-align: right;
-    }
-
-    .total {
-        font-weight: bold;
-        color: blue;
-    }
-
-    .form-control {
-        font-size: inherit;
-        font-weight: 400;
-    }
-
-    .bodycontainer {
-        /* width: 1000px; */
-        max-height: 500px;
-        margin: 0;
-        overflow-y: auto;
-    }
-
-    /* #datatable td {
-        padding: 2px !important;
-        vertical-align: middle;
-    } */
-
-    .table-scrollable {
-        margin: 0;
-        padding: 0;
-    }
-
-    .modal-bodys {
-        max-height: 250px;
-        overflow-y: auto;
-    }
-
-    .select2-dropdown {
-        width: 500px !important;
-    }
-
-    .checkbox_container {
-        width: 25px;
-        height: 25px;
-    }
-
-    td input[type="checkbox"] {
-        float: left;
-        margin: 0 auto;
-        width: 100%;
-    }
-
-    .form-control {
-        font-size: inherit;
-        font-weight: bolder;
-        /* text-transform: uppercase; */
-    }
-
-    .text-input {
-        font-size: 10px;
-        font-weight: bolder;
-        color: black;
-        /* text-transform: uppercase; */
-    }
-
-    #modal_bonbahan tbody td {
-        font-size: inherit;
-        padding: 5;
-    }
-
-    .alert-container {
-        background-color: Antiquewhite;
-        color: black;
-        font-weight: bolder;
-    }
-
-    .hr-footer {
-        border: 2px solid black;
-        border-radius: 2px;
-        margin: 25px;
-    }
-
-    .input-hidden {
-        display: none;
-    }
-
-    /* SWEETALERT */
-    .colored-toast.swal2-icon-success {
-        background-color: #4e73df !important;
-    }
-
-    .colored-toast.swal2-icon-info {
-        background-color: #1ec88b !important;
-    }
-
-    .colored-toast.swal2-icon-error {
-        background-color: #e75042 !important;
-    }
-
-    .colored-toast .swal2-title {
-        color: white;
-    }
-
-    .colored-toast .swal2-close {
-        color: white;
-    }
-
-    .colored-toast .swal2-html-container {
-        color: white;
-    }
-
-    .width-select {
-        width: 100px;
-    }
-
-    .rincian-detail {
-        background-color: Antiquewhite;
-        color: black;
-        text-align: center;
-    }
-
-    /* BATAS SWEETALERT */
-</style> -->
 
 <form id="form" method="post">
     <div class="card m-3">
         <div class="card-header">
-            Sales Order
+            <h5 class="card-title"><?= $data['title'] ?? 'Dashboard'; ?></h5>
         </div>
         <div class="card-body">
 
             <div class="col-md-12">
 
                 <div class="row">
+
+                <div class="form-group col-md-4">
+                        <label class="col-form-label label" for="customer_id">Customer</label>
+                        <select name="customer_id" id="customer_id" class="form-control select2"></select>
+                    </div>
+
                     <div class="form-group col-md-4">
                         <label class="col-form-label label" for="customer_name">Nama Customer</label>
                         <input type="text" name="customer_name" id="customer_name" class="form-control text-input" required>
@@ -340,6 +198,32 @@ use Core\Env;
             });
         });
 
+        $('#customer_id').select2({
+            ajax: {
+                url: '<?= Env::get('BASE_URL') ?>/customer/select',
+                dataType: 'json',
+                delay: 10,
+                data: function(params) {
+					return {
+						search: params.term,
+						page: params.page
+					}
+				},
+				processResults: function(data, params) {
+					params.page = params.page || 1;
+					return {
+						results: data.items,
+						pagination: {
+							more: data.total_count
+						}
+					};
+				},
+                cache: true
+            },
+            allowClear: true,
+			placeholder: 'Pilih Customer',
+			minimumInputLength: 0,
+        });
 
 
     });

@@ -13,34 +13,37 @@ use Exception;
 
 class SalesOrderController extends Controller
 {
-    private $salesOrderModel;
+    private $sales_order;
+    private $data;
 
     public function __construct()
     {
-        $this->salesOrderModel = new SalesOrder();
+        $this->sales_order = new SalesOrder();
+        $this->data = [
+            'title' => 'Sales Order',
+        ];
     }
 
     public function index()
     {
-        $this->view('sales-order/index', ['title' => 'Sales Order'], 'layouts/main');
+        $this->view('sales-order/index', $this->data, 'layouts/main');
     }
 
     public function ajaxList()
     {
         header('Content-Type: application/json');
-        echo json_encode($this->salesOrderModel->all());
+        echo json_encode($this->sales_order->all());
     }
 
     public function data()
     {
-        $model = new SalesOrder();
-        $sales_orders = $model->all();
+        $sales_orders = $this->sales_order->all();
         echo json_encode(['data' => $sales_orders]);
     }
 
     public function create()
     {
-        $this->view('sales-order/create', ['title' => 'Tambah Sales Order'], 'layouts/main');
+        $this->view('sales-order/create', $this->data, 'layouts/main');
     }
 
     public function store()
@@ -51,8 +54,7 @@ class SalesOrderController extends Controller
 
         try {
 
-            $model = new SalesOrder();
-            $so_id = $model->insert([
+            $so_id = $this->sales_order->insert([
                 // 'tenant_id' => Auth::user()['tenant_id'],
                 'customer_name' => $_POST['customer_name'],
                 'customer_code' => $_POST['customer_code'],
@@ -98,18 +100,16 @@ class SalesOrderController extends Controller
 
     public function edit($id)
     {
-        $model = new SalesOrder();
-        $product = $model->find($id);
+        $this->data['sales_order'] = $this->sales_order->find($id);
 
-        $this->view('sales-order/edit', ['title' => 'Edit Sales Order', 'Sales Order' => $product], 'layouts/main');
+        $this->view('sales-order/edit', $this->sales_order, 'layouts/main');
     }
 
     public function print($id)
     {
-        $model = new SalesOrder();
-        $product = $model->find($id);
+        $this->data['sales_order'] = $this->sales_order->find($id);
 
-        $this->view('sales-order/print', ['title' => 'Edit Sales Order', 'Sales Order' => $product], 'layouts/main');
+        $this->view('sales-order/print', $this->sales_order, 'layouts/main');
     }
     
 
@@ -119,17 +119,9 @@ class SalesOrderController extends Controller
         $db->beginTransaction();
 
         try {
-            $errors = Validator::validate($_POST, [
-                'name' => 'required|min:3',
-                'description' => 'required'
-            ]);
 
-            if ($errors) {
-                throw new \Exception(json_encode($errors));
-            }
-
-            $model = new SalesOrder();
-            $model->update($id, [
+            
+            $this->sales_order->update($id, [
                 'name' => $_POST['name'],
                 'description' => $_POST['description']
             ]);
@@ -162,8 +154,7 @@ class SalesOrderController extends Controller
     public function delete($id)
     {
         try {
-            $model = new SalesOrder();
-            $model->softDelete($id);
+            $this->sales_order->softDelete($id);
             echo json_encode(['status' => true, 'message' => 'Sales Order dihapus']);
         } catch (Exception $e) {
             http_response_code(500);
