@@ -198,7 +198,7 @@ use Core\Env;
             });
         });
 
-        $('#customer_id').select2({
+        $('.select2').select2({
             ajax: {
                 url: '<?= Env::get('BASE_URL') ?>/customer/select',
                 dataType: 'json',
