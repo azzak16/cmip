@@ -51,8 +51,6 @@ class CustomerController extends Controller
         }
         $perPage = 10;
 
-        // $search, $xa, $perPage
-
         $results = $this->customer->raw("SELECT *
                 FROM customers
                 WHERE AKTIF = 1
@@ -65,17 +63,15 @@ class CustomerController extends Controller
         $selectajax = [];
         foreach ($items as $row) {
             $selectajax[] = array(
-                'NO_ID' => $row['NO_ID'],
+                'id' => $row['NO_ID'],
                 'text' => $row['CS_NAMA'],
             );
         }
-        $select['total_count'] =  $results->fetchColumn();
-        $select['items'] = $selectajax;
 
-        // print_r($select);
-        // die();
-
-        echo json_encode($select);
+        echo json_encode([
+            'total_count' =>  $results->fetchColumn(),
+            'items' => $selectajax
+        ]);
     }
 
     public function create()

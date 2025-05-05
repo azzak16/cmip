@@ -199,31 +199,31 @@ use Core\Env;
         });
 
         $('.select2').select2({
-            ajax: {
-                url: '<?= Env::get('BASE_URL') ?>/customer/select',
-                dataType: 'json',
-                delay: 10,
-                data: function(params) {
-					return {
-						search: params.term,
-						page: params.page
-					}
-				},
-				processResults: function(data, params) {
-					params.page = params.page || 1;
-					return {
-						results: data.items,
-						pagination: {
-							more: data.total_count
-						}
-					};
-				},
-                cache: true
-            },
-            allowClear: true,
-			placeholder: 'Pilih Customer',
-			minimumInputLength: 0,
-        });
+    ajax: {
+        url: '<?= Env::get('BASE_URL') ?>/customer/select',
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+            return {
+                search: params.term,  // teks yang diketik user
+                page: params.page || 1
+            };
+        },
+        processResults: function (data) {
+            return {
+                results: data.items.map(function(item) {
+                    return { id: item.id, text: item.text };
+                }),
+                pagination: {
+                    more: true
+                }
+            };
+        }
+    },
+    placeholder: 'Pilih customer',
+    minimumInputLength: 0
+});
+
 
 
     });
