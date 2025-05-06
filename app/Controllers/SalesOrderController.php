@@ -10,6 +10,7 @@ use Core\Auth;
 use Core\Database;
 use Core\Env;
 use Exception;
+use PDO;
 
 class SalesOrderController extends Controller
 {
@@ -56,9 +57,8 @@ class SalesOrderController extends Controller
 
             $so_id = $this->sales_order->insert([
                 // 'tenant_id' => Auth::user()['tenant_id'],
-                'customer_name' => $_POST['customer_name'],
-                'customer_code' => $_POST['customer_code'],
-                'customer_address' => $_POST['customer_address'],
+                'customer_id' => $_POST['customer_id'],
+                'karat' => $_POST['karat_id'],
                 'production_code' => $_POST['production_code'],
                 'order_number' => $_POST['order_number'],
                 'order_date' => $_POST['order_date'],
@@ -68,19 +68,25 @@ class SalesOrderController extends Controller
                 'ppic' => $_POST['ppic'],
                 'head_sales' => $_POST['head_sales'],
                 'order_recipient' => $_POST['order_recipient'],
+                'status' => $_POST['status'],
             ]);
 
-            foreach ($_POST['product_name'] as $key => $value) {
+            foreach ($_POST['product_desc'] as $key => $value) {
                 $model_item = new SalesOrderItem();
                 $model_item->insert([
-                    'sales_order_id' => $so_id,
-                    'product_name' => $_POST['product_name'][$key],
+                    'sales_order_number' => $_POST['order_number'],
+                    'product_desc' => $_POST['product_desc'][$key],
+                    'ukuran_pcs' => $_POST['ukuran_pcs'][$key],
+                    'panjang_pcs' => $_POST['panjang_pcs'][$key],
+                    'gram_pcs' => $_POST['gram_pcs'][$key],
+                    'batu_pcs' => $_POST['batu_pcs'][$key],
+                    'tok_pcs' => $_POST['tok_pcs'][$key],
                     'color' => $_POST['color'][$key],
-                    'karat' => $_POST['karat'][$key],
+                    'karat' => $_POST['karat_id'],
                     'pcs' => $_POST['pcs'][$key],
                     'pairs' => $_POST['pairs'][$key],
                     'gram' => $_POST['gram'][$key],
-                    'note' => $_POST['note'][$key],
+                    'notes' => $_POST['note'][$key],
                 ]);
             }
 
@@ -100,16 +106,25 @@ class SalesOrderController extends Controller
 
     public function edit($id)
     {
-        $this->data['sales_order'] = $this->sales_order->find($id);
+        $result = $this->sales_order->raw(
+            "SELECT *
+                FROM sales_orders
+                left join sales_order_items on sales_orders.order_number = sales_order_items.sales_order_number
+                WHERE sales_orders.id = $id"
+        );
 
-        $this->view('sales-order/edit', $this->sales_order, 'layouts/main');
+        $items = $result->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($items);
+        die();
+
+        $this->view('sales-order/edit', $this->data, 'layouts/main');
     }
 
     public function print($id)
     {
         $this->data['sales_order'] = $this->sales_order->find($id);
 
-        $this->view('sales-order/print', $this->sales_order, 'layouts/main');
+        $this->view('sales-order/print', $this->data, 'layouts/main');
     }
     
 

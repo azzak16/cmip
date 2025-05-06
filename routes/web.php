@@ -4,6 +4,7 @@ use App\Controllers\AuthController;
 use App\Controllers\CustomerController;
 use App\Controllers\DashboardController;
 use App\Controllers\HomeController;
+use App\Controllers\KaratController;
 use App\Controllers\ProductController;
 use App\Controllers\SalesOrderController;
 use Core\Router;
@@ -28,6 +29,10 @@ $router->get('/products/edit/{id}', [ProductController::class, 'edit']);
 $router->post('/products/update/{id}', [ProductController::class, 'update']);
 $router->post('/products/delete/{id}', [ProductController::class, 'delete']);
 // $router->post('/products/delete/(\d+)', [ProductController::class, 'delete']);
+
+// karat
+$router->get('/karat/select', [KaratController::class, 'select']);
+$router->get('/karat/salesSelect', [KaratController::class, 'salesSelect']);
 
 // customer
 $router->get('/customer', [CustomerController::class, 'index']);

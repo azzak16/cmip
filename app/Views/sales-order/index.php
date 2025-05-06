@@ -17,9 +17,9 @@ use Core\Env;
                 <table class="table table-sm" id="datatable">
                 <thead>
                     <tr>
-                        <th>Nama Customer</th>
                         <th>Kode Produksi</th>
                         <th>Nomer Order</th>
+                        <th class="text-center">Status</th>
                         <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -33,9 +33,7 @@ use Core\Env;
 <script>
     var datatable = $('#datatable').DataTable({
         ajax: '<?= Env::get('BASE_URL') ?>/sales-order/data',
-        columns: [{
-                data: 'customer_name'
-            },
+        columns: [
             {
                 data: 'production_code'
             },
@@ -44,6 +42,23 @@ use Core\Env;
             },
             {
                 data: 'id',
+                className: 'text-center',
+                render: function(data, type, row, meta) {
+
+                    var html = '';
+
+                    if (row.status == 'DRAFT') {
+                        html = `<h5><span class="badge badge-secondary">${row.status}</span></h5>`
+                    }else{
+                        html = `<h5><span class="badge badge-warning">${row.status}</span></h5>`
+                    }
+
+                    return html;
+                }
+            },
+            {
+                data: 'id',
+                className: 'text-center',
                 render: function(data, type, row, meta) {
 
                     var html = `<div>
@@ -57,19 +72,6 @@ use Core\Env;
             }
         ]
     });
-
-    // $('#datatable').on('click', '.btn-edit', function() {
-    //     var id = $(this).data('id');
-    //     $.get(`<?= Env::get('BASE_URL') ?>/sales-order/edit/${id}`, function(res) {
-    //         $('[name="id"]').val(res.id);
-    //         $('[name="name"]').val(res.name);
-    //         $('[name="price"]').val(res.price);
-    //         var newOption = new Option(res.category_name, res.category_id, true, true);
-    //         $('[name="category_id"]').append(newOption).trigger('change');
-
-    //         $('#modalForm').modal('show');
-    //     });
-    // });
 
     $('#datatable').on('click', '.btn-delete', function() {
         const id = $(this).data('id');

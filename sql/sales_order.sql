@@ -1,3 +1,5 @@
+SET FOREIGN_KEY_CHECKS=0;
+
 CREATE TABLE customers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -5,42 +7,68 @@ CREATE TABLE customers (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS sales_orders;
 CREATE TABLE sales_orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    customer_name VARCHAR(100),
-    customer_address TEXT,
-    customer_code VARCHAR(50),
-    production_code VARCHAR(50),
-    order_number VARCHAR(50),
+    customer_id INT NOT NULL,
+    karat_id INT NOT NULL,
+    production_code VARCHAR(50) UNIQUE,
+    order_number VARCHAR(50) UNIQUE,
     order_date DATE,
-    payment_terms VARCHAR(255),
-    delivery_plan VARCHAR(255),
-    manager_production VARCHAR(100),
-    ppic VARCHAR(100),
-    head_sales VARCHAR(100),
-    order_recipient VARCHAR(100),
+    payment_terms VARCHAR(255) NULL,
+    delivery_plan VARCHAR(255) NULL,
+    manager_production VARCHAR(100) NULL,
+    ppic VARCHAR(100) NULL,
+    head_sales VARCHAR(100) NULL,
+    order_recipient VARCHAR(100) NULL,
+    notes TEXT NULL,
+    status VARCHAR(50) NULL,
+    deleted_at DATETIME DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    -- FOREIGN KEY (customer_id) REFERENCES customers(id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customers(NO_ID),
+    FOREIGN KEY (karat_id) REFERENCES karat(NO_ID)
 );
 
+DROP TABLE IF EXISTS products;
 CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    code VARCHAR(100) UNIQUE NULL,
+    color VARCHAR(100) NULL,
+    type VARCHAR(100) NULL,
+    karat_id INT NOT NULL,
+    qty INT DEFAULT 0,
+    min_qty INT DEFAULT 0,
+    notes TEXT NULL,
+    status VARCHAR(50) NULL,
+    deleted_at DATETIME DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (karat_id) REFERENCES karat(NO_ID)
 );
 
+DROP TABLE IF EXISTS sales_order_items;
 CREATE TABLE sales_order_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    sales_order_id INT NOT NULL,
-    product_id INT NOT NULL,
-    color VARCHAR(50),
-    karat VARCHAR(10),
+    sales_order_number VARCHAR(50) NOT NULL,
+    product_id INT NULL,
+    product_desc VARCHAR(50) NULL,
+    ukuran_pcs VARCHAR(50) NULL,
+    panjang_pcs VARCHAR(50) NULL,
+    gram_pcs DECIMAL(10,2) DEFAULT 0,
+    batu_pcs VARCHAR(50) NULL,
+    tok_pcs VARCHAR(50) NULL,
+    color VARCHAR(50) NULL,
+    karat VARCHAR(10) NULL,
     pcs INT DEFAULT 0,
     pairs INT DEFAULT 0,
     gram DECIMAL(10,2) DEFAULT 0,
-    note TEXT,
+    notes TEXT NULL,
+    status VARCHAR(50) NULL,
+    deleted_at DATETIME DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (sales_order_id) REFERENCES sales_orders(id),
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (sales_order_number) REFERENCES sales_orders(order_number),
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
