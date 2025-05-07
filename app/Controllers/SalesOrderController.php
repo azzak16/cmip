@@ -49,9 +49,11 @@ class SalesOrderController extends Controller
 
     public function store()
     {
-
         $db = Database::getInstance();
         $db->beginTransaction();
+
+        $orde_number = $this->sales_order->number($_POST['order_date']);
+        $production_code = $this->sales_order->code($_POST['customer_id'], $_POST['order_date']);
 
         try {
 
@@ -59,8 +61,8 @@ class SalesOrderController extends Controller
                 // 'tenant_id' => Auth::user()['tenant_id'],
                 'customer_id' => $_POST['customer_id'],
                 'karat' => $_POST['karat_id'],
-                'production_codes' => $_POST['production_code'],
-                'order_number' => $_POST['order_number'],
+                'production_code' => $_POST['production_code']?: $production_code,
+                'order_number' => $_POST['order_number']?: $orde_number,
                 'order_date' => $_POST['order_date'],
                 'payment_terms' => $_POST['payment_terms'],
                 'delivery_plan' => $_POST['delivery_plan'],
@@ -74,7 +76,7 @@ class SalesOrderController extends Controller
             foreach ($_POST['product_desc'] as $key => $value) {
                 $model_item = new SalesOrderItem();
                 $model_item->insert([
-                    'sales_order_number' => $_POST['order_number'],
+                    'sales_order_number' => $_POST['order_number']?: $orde_number,
                     'product_desc' => $_POST['product_desc'][$key],
                     'ukuran_pcs' => $_POST['ukuran_pcs'][$key],
                     'panjang_pcs' => $_POST['panjang_pcs'][$key],

@@ -44,20 +44,24 @@ class CustomerController extends Controller
     {
         $search = $_GET['search'] ?? '';
         $page = (int)($_GET['page'] ?? 1);
-        if ($page == 0) {
-            $xa = 0;
-        } else {
-            $xa = ($page - 1) * 10;
-        }
-        $perPage = 10;
+        $limit = 10;
+        $offset = ($page - 1) * $limit;
+
+        $stmt = $this->customer->raw("SELECT count(*)
+                FROM customers
+                WHERE AKTIF = 1
+                AND CS_NAMA LIKE '%$search%'
+                AND CS_NAMA != ''
+                ORDER BY CS_NAMA");
+        $stmt->execute();
+        $total = $stmt->fetchColumn();
 
         $results = $this->customer->raw("SELECT *
                 FROM customers
                 WHERE AKTIF = 1
                 AND CS_NAMA LIKE '%$search%'
                 AND CS_NAMA != ''
-                ORDER BY CS_NAMA LIMIT $xa,$perPage");
-
+                ORDER BY CS_NAMA LIMIT $limit OFFSET $offset");
         $items = $results->fetchAll(PDO::FETCH_ASSOC);
 
         $selectajax = [];
@@ -69,7 +73,7 @@ class CustomerController extends Controller
         }
 
         echo json_encode([
-            'total_count' =>  $results->fetchColumn(),
+            'hasMore' => ($offset + $limit) < $total,
             'items' => $selectajax
         ]);
     }

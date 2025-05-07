@@ -37,11 +37,13 @@ use Core\Env;
 
                     <div class="form-group col-md-4">
                         <label class="col-form-label label" for="production_code">Kode Produksi</label>
-                        <input type="text" name="production_code" id="production_code" class="form-control text-input" required>
+                        <input type="text" name="production_code" id="production_code" class="form-control text-input">
+                        <small class="text-muted" style="font-size: 12px;">Jika dikosongi maka kode produksi akan otomatis</small>
                     </div>
                     <div class="form-group col-md-4">
                         <label class="col-form-label label" for="order_number">Nomor Order</label>
-                        <input type="text" name="order_number" id="order_number" class="form-control text-input" required>
+                        <input type="text" name="order_number" id="order_number" class="form-control text-input">
+                        <small class="text-muted" style="font-size: 12px;">Jika dikosongi maka nomor so akan otomatis</small>
                     </div>
                     <div class="form-group col-md-4">
                         <label class="col-form-label label" for="order_date">Tanggal Order</label>
@@ -133,10 +135,10 @@ use Core\Env;
                                         <input name="panjang_pcs[]" id="panjang_pcs" type="text"class="form-control text-input" >
                                     </td>
                                     <td>
-                                        <input name="gram_pcs[]" id="gram_pcs" type="text"class="form-control text-input" >
+                                        <input name="gram_pcs[]" id="gram_pcs" type="number" class="form-control text-input" step="any" value="0">
                                     </td>
                                     <td>
-                                        <input name="batu_pcs[]" id="batu_pcs" type="text"class="form-control text-input" >
+                                        <input name="batu_pcs[]" id="batu_pcs" type="text"class="form-control text-input">
                                     </td>
                                     <td>
                                         <input name="tok_pcs[]" id="tok_pcs" type="text"class="form-control text-input" >
@@ -148,13 +150,13 @@ use Core\Env;
                                         <input name="karat[]" id="karat" type="text"class="form-control text-input" >
                                     </td> -->
                                     <td>
-                                        <input name="pcs[]" id="pcs" type="text"class="form-control text-input" >
+                                        <input name="pcs[]" id="pcs" type="number" class="form-control text-input" step="any" value="0">
                                     </td>
                                     <td>
-                                        <input name="pairs[]" id="pairs" type="text"class="form-control text-input" >
+                                        <input name="pairs[]" id="pairs" type="number" class="form-control text-input" step="any" value="0">
                                     </td>
                                     <td>
-                                        <input name="gram[]" id="gram" type="text"class="form-control text-input" >
+                                        <input name="gram[]" id="gram" type="number" class="form-control text-input" step="any" value="0">
                                     </td>
                                     <td>
                                         <input name="note[]" id="note" type="text"class="form-control text-input" >
@@ -272,7 +274,7 @@ use Core\Env;
                             return { id: item.id, text: item.text };
                         }),
                         pagination: {
-                            more: true
+                            more: data.hasMore
                         }
                     };
                 }
@@ -299,7 +301,7 @@ use Core\Env;
                             return { id: item.id, text: item.text };
                         }),
                         pagination: {
-                            more: true
+                            more: data.hasMore
                         }
                     };
                 }
@@ -357,14 +359,14 @@ use Core\Env;
         td01.innerHTML = "<input name='product_desc[]' id=product_desc" + idrow + " type='text' class='form-control text-input'>";
         td02.innerHTML = "<input name='ukuran_pcs[]' id=ukuran_pcs" + idrow + " type='text' class='form-control text-input'>";
         td03.innerHTML = "<input name='panjang_pcs[]' id=panjang_pcs" + idrow + " type='text' class='form-control text-input'>";
-        td04.innerHTML = "<input name='gram_pcs[]' id=gram_pcs" + idrow + " type='text' class='form-control text-input'>";
+        td04.innerHTML = "<input name='gram_pcs[]' id=gram_pcs" + idrow + " type='text' class='form-control text-input' step='any' value='0'>";
         td05.innerHTML = "<input name='batu_pcs[]' id=batu_pcs" + idrow + " type='text' class='form-control text-input'>";
         td06.innerHTML = "<input name='tok_pcs[]' id=tok_pcs" + idrow + " type='text' class='form-control text-input'>";
         td07.innerHTML = "<input name='color[]' id=color" + idrow + " type='text' class='form-control text-input'>";
         // td08.innerHTML = "<input name='karat[]' id=karat" + idrow + " type='text' class='form-control text-input'>";
-        td08.innerHTML = "<input name='pcs[]' id=pcs" + idrow + " type='text' class='form-control text-input'>";
-        td09.innerHTML = "<input name='pairs[]' id=pairs" + idrow + " type='text' class='form-control text-input'>";
-        td10.innerHTML = "<input name='gram[]' id=gram" + idrow + " type='text' class='form-control text-input'>";
+        td08.innerHTML = "<input name='pcs[]' id=pcs" + idrow + " type='text' class='form-control text-input' step='any' value='0'>";
+        td09.innerHTML = "<input name='pairs[]' id=pairs" + idrow + " type='text' class='form-control text-input' step='any' value='0'>";
+        td10.innerHTML = "<input name='gram[]' id=gram" + idrow + " type='text' class='form-control text-input' step='any' value='0'>";
         td11.innerHTML = "<input name='note[]' id=note" + idrow + " type='text' class='form-control text-input'>";
         td12.innerHTML = "<input type='hidden' value='0' name='NO_ID[]' id=NO_ID" + idrow + "  class='form-control'>" +
             " <button type='button' class='btn btn-sm btn-circle btn-outline-danger btn-delete' onclick=''> <i class='fa fa-fw fa-trash'></i> </button>";

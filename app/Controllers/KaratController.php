@@ -44,52 +44,21 @@ class KaratController extends Controller
     {
         $search = $_GET['search'] ?? '';
         $page = (int)($_GET['page'] ?? 1);
-        if ($page == 0) {
-            $xa = 0;
-        } else {
-            $xa = ($page - 1) * 10;
-        }
-        $perPage = 10;
+        $limit = 10;
+        $offset = ($page - 1) * $limit;
+
+        $stmt = $this->customer->raw("SELECT count(*)
+                FROM karat
+                Where KARAT LIKE '%$search%'
+                AND KARAT != ''");
+        $stmt->execute();
+        $total = $stmt->fetchColumn();
 
         $results = $this->customer->raw("SELECT *
                 FROM karat
                 Where KARAT LIKE '%$search%'
                 AND KARAT != ''
-                ORDER BY KARAT LIMIT $xa,$perPage");
-
-        $items = $results->fetchAll(PDO::FETCH_ASSOC);
-
-        $selectajax = [];
-        foreach ($items as $row) {
-            $selectajax[] = array(
-                'id' => $row['NO_ID'],
-                'text' => $row['KARAT'],
-            );
-        }
-
-        echo json_encode([
-            'total_count' =>  $results->fetchColumn(),
-            'items' => $selectajax
-        ]);
-    }
-
-    public function salesSelect()
-    {
-        $search = $_GET['search'] ?? '';
-        $page = (int)($_GET['page'] ?? 1);
-        if ($page == 0) {
-            $xa = 0;
-        } else {
-            $xa = ($page - 1) * 10;
-        }
-        $perPage = 10;
-
-        $results = $this->customer->raw("SELECT KARAT_SALES
-                FROM karat
-                Where KARAT_SALES LIKE '%$search%'
-                AND KARAT_SALES != ''
-                GROUP BY KARAT_SALES
-                ORDER BY KARAT LIMIT $xa,$perPage");
+                ORDER BY 'KARAT' LIMIT $limit OFFSET $offset");
 
         $items = $results->fetchAll(PDO::FETCH_ASSOC);
 
@@ -102,7 +71,45 @@ class KaratController extends Controller
         }
 
         echo json_encode([
-            'total_count' =>  $results->fetchColumn(),
+            'hasMore' => ($offset + $limit) < $total,
+            'items' => $selectajax
+        ]);
+    }
+
+    public function salesSelect()
+    {
+        $search = $_GET['search'] ?? '';
+        $page = (int)($_GET['page'] ?? 1);
+        $limit = 10;
+        $offset = ($page - 1) * $limit;
+
+        $stmt = $this->customer->raw("SELECT count(*)
+                FROM karat
+                Where KARAT_SALES LIKE '%$search%'
+                AND KARAT_SALES != ''
+                GROUP BY KARAT_SALES");
+        $stmt->execute();
+        $total = $stmt->fetchColumn();
+
+        $results = $this->customer->raw("SELECT KARAT_SALES
+                FROM karat
+                Where KARAT_SALES LIKE '%$search%'
+                AND KARAT_SALES != ''
+                GROUP BY KARAT_SALES
+                ORDER BY 'KARAT' LIMIT $limit OFFSET $offset");
+
+        $items = $results->fetchAll(PDO::FETCH_ASSOC);
+
+        $selectajax = [];
+        foreach ($items as $row) {
+            $selectajax[] = array(
+                'id' => $row['KARAT_SALES'],
+                'text' => $row['KARAT_SALES'],
+            );
+        }
+
+        echo json_encode([
+            'hasMore' => ($offset + $limit) < $total,
             'items' => $selectajax
         ]);
     }
