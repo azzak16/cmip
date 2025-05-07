@@ -187,6 +187,26 @@ use Core\Env;
         </div>
     </div>
 
+    <div class="card m-3">
+        <div class="card-header">
+            <h5 class="card-title">Foto</h5>
+        </div>
+        <div class="card-body">
+            <div class="col-md-12">
+
+                <div class="row">
+
+                    <div class="form-group col-md-4">
+                        <label class="col-form-label label" for="image">Image</label>
+                        <input type="file" class="form-control-file" id="image" name="image[]">
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 </form>
 
 
@@ -224,7 +244,9 @@ use Core\Env;
                     // table.ajax.reload();
                 },
                 error: function(xhr) {
+                    console.log(xhr.responseText);
                     const err = JSON.parse(xhr.responseText);
+                    
                     Toast.fire({
                         icon: "warning",
                         title: err.message

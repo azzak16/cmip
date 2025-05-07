@@ -62,9 +62,9 @@ use Core\Env;
                 render: function(data, type, row, meta) {
 
                     var html = `<div>
-                                    <a href="<?= Env::get('BASE_URL') ?>/sales-order/edit/${row.id}" class="btn btn-sm btn-info btn-edit" >Edit</a>
-                                    <a class="btn btn-sm btn-danger btn-delete" data-id="${row.id}">Delete</a>
-                                    <a href="<?= Env::get('BASE_URL') ?>/sales-order/print/${row.id}" target="_blank" class="btn btn-sm btn-primary">Print</a>
+                                    <a href="<?= Env::get('BASE_URL') ?>/sales-order/edit/${row.id}" class="btn btn-sm btn-outline-info btn-edit" ><i class="fas fa-pencil"></i></a>
+                                    <a class="btn btn-sm btn-outline-danger btn-delete" data-id="${row.id}"><i class="fas fa-trash"></i></a>
+                                    <a href="<?= Env::get('BASE_URL') ?>/sales-order/print/${row.id}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-print"></i></a>
                                 </div>`;
 
                     return html;

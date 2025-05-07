@@ -33,19 +33,22 @@ use Core\Env;
 <script>
     var datatable = $('#datatable').DataTable({
         ajax: '<?= Env::get('BASE_URL') ?>/customer/data',
-        order: [[2, 'desc']],
-        drawCallback: function(settings) {
-            var api = this.api();
-            api.column(0, { search: 'applied', order: 'applied', page: 'applied' }).nodes()
-                .each(function(cell, i) {
-                    cell.innerHTML = api.page.info().start + i + 1;
-                });
-        },
+        order: [[0, 'asc']],
+        // drawCallback: function(settings) {
+        //     var api = this.api();
+        //     api.column(0, { search: 'applied', order: 'applied', page: 'applied' }).nodes()
+        //         .each(function(cell, i) {
+        //             cell.innerHTML = api.page.info().start + i + 1;
+        //         });
+        // },
         columns: [
             {
-                data: null,
-                searchable: false,
-                orderable: false,
+                data: null,  
+                render: function(data, type, row, meta) {
+                    return meta.row + 1 + meta.settings._iDisplayStart;
+                },
+                orderable: false,  
+                searchable: false  
             },
             {
                 data: 'CS_NAMA'

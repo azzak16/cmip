@@ -180,6 +180,11 @@ td input[type="checkbox"] {
     width: 100px;
 }
 
+.select2{
+    font-size: 10px;
+    font-weight: bolder;
+} 
+
 .rincian-detail {
     background-color: Antiquewhite;
     color: black;

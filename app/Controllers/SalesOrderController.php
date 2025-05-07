@@ -59,7 +59,7 @@ class SalesOrderController extends Controller
                 // 'tenant_id' => Auth::user()['tenant_id'],
                 'customer_id' => $_POST['customer_id'],
                 'karat' => $_POST['karat_id'],
-                'production_code' => $_POST['production_code'],
+                'production_codes' => $_POST['production_code'],
                 'order_number' => $_POST['order_number'],
                 'order_date' => $_POST['order_date'],
                 'payment_terms' => $_POST['payment_terms'],
@@ -88,6 +88,10 @@ class SalesOrderController extends Controller
                     'gram' => $_POST['gram'][$key],
                     'notes' => $_POST['note'][$key],
                 ]);
+
+                if (!$model_item) {
+                    throw new Exception("Gagal menyimpan item ke-$key.");
+                }
             }
 
             $db->commit();
@@ -100,7 +104,10 @@ class SalesOrderController extends Controller
         } catch (Exception $e) {
             $db->rollBack();
             http_response_code(500);
-            echo json_encode(['status' => false, 'message' => $e->getMessage()]);
+            echo json_encode([
+                'status' => false, 
+                'message' => $e->getMessage()
+            ]);
         }
     }
 

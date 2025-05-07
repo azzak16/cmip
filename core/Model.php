@@ -3,6 +3,7 @@
 namespace Core;
 
 use Core\Database;
+use Exception;
 use PDO;
 use PDOException;
 
@@ -33,7 +34,11 @@ abstract class Model
         $placeholders = ':' . implode(', :', array_keys($data));
 
         $stmt = $this->db->prepare("INSERT INTO {$this->table} ($columns) VALUES ($placeholders)");
-        $stmt->execute($data);
+
+        if (!$stmt->execute($data)) {
+            $error = $stmt->errorInfo(); 
+            throw new Exception("Gagal insert");
+        }
 
         return $this->db->lastInsertId();
     }
