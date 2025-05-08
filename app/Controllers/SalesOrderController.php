@@ -49,6 +49,8 @@ class SalesOrderController extends Controller
 
     public function store()
     {
+// print_r($_POST);
+// die();
         $db = Database::getInstance();
         $db->beginTransaction();
 
@@ -95,6 +97,57 @@ class SalesOrderController extends Controller
                     throw new Exception("Gagal menyimpan item ke-$key.");
                 }
             }
+
+print_r($_FILES['images']);
+            die();
+$extension=array("jpeg","jpg","png","gif");
+foreach($_FILES["images"]["name"] as $key=>$tmp_name) {
+    $file_name=$_FILES["images"]["name"][$key];
+    $file_tmp=$_FILES["images"]["tmp_name"][$key];
+    $ext=pathinfo($file_name,PATHINFO_EXTENSION);
+
+    if(in_array($ext,$extension)) {
+        // if(!file_exists(ROOT_PATH . 'storage/uploads/'.$file_name)) {
+        //     move_uploaded_file($file_tmp=$_FILES["images"]["tmp_name"][$key],ROOT_PATH . 'storage/uploads/'.$file_name);
+        // }
+        // else {
+            // $filename=basename($file_name,$ext);
+            $newFileName=time().".".$ext;
+            move_uploaded_file($file_tmp=$_FILES["images"]["tmp_name"][$key],ROOT_PATH . 'storage/uploads/'.$newFileName);
+        // }
+    }
+    else {
+        array_push($error,"$file_name, ");
+    }
+}
+
+
+            // Simpan file upload
+        // if (!empty($_FILES['images'])) {
+        //     $uploadDir = ROOT_PATH . 'storage/uploads/';
+
+        //     foreach ($_FILES['images'] as $file) {
+        //         print_r($file);
+        //         die();
+        //         $newFilename = Str::after($file, 'tmp/');
+        //         Storage::disk('public')->move($file, "images/$newFilename");
+        //         $newFiles[] = ['image' => "images/$newFilename"];
+        //     }
+
+        //     foreach ($_FILES['images']['tmp_name'] as $index => $tmpName) {
+        //         $originalName = $_FILES['images']['name'];
+        //         $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+
+        //         $name = time().'.'.$extension;
+
+        //         $target = $uploadDir . $name;
+        //         move_uploaded_file($tmpName, $target);
+        //         // if () {
+        //         //     // Simpan ke DB jika perlu
+        //         //     // $this->salesOrderFile->insert(['sales_order_id' => $salesOrderId, 'file_path' => $target]);
+        //         // }
+        //     }
+        // }
 
             $db->commit();
             echo json_encode([

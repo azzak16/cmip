@@ -2,9 +2,14 @@
 
 use Core\Env;
 ?>
+<link href="https://unpkg.com/filepond/dist/filepond.min.css" rel="stylesheet">
+<link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css" rel="stylesheet">
+<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
 
 
-<form id="form" method="post">
+<form id="form" method="post" enctype="multipart/form-data">
     <div class="card m-3">
         <div class="card-header">
             <h5 class="card-title"><?= $data['title'] ?? 'Dashboard'; ?></h5>
@@ -195,16 +200,7 @@ use Core\Env;
         </div>
         <div class="card-body">
             <div class="col-md-12">
-
-                <div class="row">
-
-                    <div class="form-group col-md-4">
-                        <label class="col-form-label label" for="image">Image</label>
-                        <input type="file" class="form-control-file" id="image" name="image[]">
-                    </div>
-
-                </div>
-
+            <input type="file" class="filepond" name="images[]" multiple >
             </div>
         </div>
     </div>
@@ -214,7 +210,24 @@ use Core\Env;
 
 
 <script>
+    
+    FilePond.registerPlugin(
+        FilePondPluginImagePreview,
+        FilePondPluginFileValidateType
+    );
+    FilePond.create(document.querySelector('.filepond'), {
+        name: 'images',
+        allowMultiple: true,
+        maxFiles: 5, // opsional, batas maksimal
+        instantUpload: false, // jika ingin upload saat submit form
+        // allowFileEncode: false,
+        acceptedFileTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/gif'],
+        labelFileTypeNotAllowed: 'Hanya gambar yang diizinkan.',
+        fileValidateTypeLabelExpectedTypes: 'Format yang diizinkan: PNG, JPG, JPEG, WEBP, GIF'
+    });
+
     $(document).ready(function() {
+
 
         $('.select2').select2();
 
@@ -223,11 +236,21 @@ use Core\Env;
         $('#form').on('submit', function(e) {
             e.preventDefault();
 
+            const formData = new FormData(this);
+            const pond = FilePond.find(document.querySelector('.filepond'));
+            // const files = pond.getFiles();
+            // files.forEach((file, index) => {
+            //     formData.append('images[]', file.file);
+            // });
+
+
             $.ajax({
                 url: '<?= Env::get('BASE_URL') ?>/sales-order/store',
                 method: 'POST',
-                data: $(this).serialize(),
+                data: formData,
                 dataType: 'json',
+                contentType: false,
+                processData: false,
                 ajaxStart: function() {
                     $('#overlay').fadeIn(100);
                 },
@@ -240,10 +263,6 @@ use Core\Env;
                         title: res.message
                     });
                     window.location.href = res.redirect;
-
-                    // $('#modalForm').modal('hide');
-                    // $('#form-product')[0].reset();
-                    // table.ajax.reload();
                 },
                 error: function(xhr) {
                     console.log(xhr.responseText);
