@@ -2,12 +2,6 @@
 
 use Core\Env;
 ?>
-<link href="https://unpkg.com/filepond/dist/filepond.min.css" rel="stylesheet">
-<link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css" rel="stylesheet">
-<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
-<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
-<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
-
 
 <form id="form" method="post" enctype="multipart/form-data">
     <div class="card m-3">
@@ -52,7 +46,7 @@ use Core\Env;
                     </div>
                     <div class="form-group col-md-4">
                         <label class="col-form-label label" for="order_date">Tanggal Order</label>
-                        <input type="date" name="order_date" id="order_date" class="form-control text-input" required>
+                        <input type="text" name="order_date" id="order_date" class="form-control text-input" required>
                     </div>
 
                     <div class="form-group col-md-4">
@@ -102,7 +96,7 @@ use Core\Env;
 
     <div class="card m-3">
         <div class="card-header">
-            Product
+            <h5 class="card-titile">Produk</h5>
         </div>
         <div class="card-body">
 
@@ -186,8 +180,6 @@ use Core\Env;
                         <button type="button" onclick="tambah()" class="btn btn-sm btn-primary"><i class="fas fa-plus fa-sm md-3"></i> </button>
                     </div>
                 </div>
-
-                <button type="submit" class="btn btn-primary col-md-6 float-right">Simpan</button>
             </div>
 
 
@@ -200,7 +192,9 @@ use Core\Env;
         </div>
         <div class="card-body">
             <div class="col-md-12">
-            <input type="file" class="filepond" name="images[]" multiple >
+                <input type="file" class="filepond" name="images[]" multiple >
+
+                <button type="submit" class="btn btn-primary mt-3 col-md-6 float-right">Simpan</button>
             </div>
         </div>
     </div>
@@ -215,8 +209,8 @@ use Core\Env;
         FilePondPluginImagePreview,
         FilePondPluginFileValidateType
     );
-    FilePond.create(document.querySelector('.filepond'), {
-        name: 'images',
+    const pond = FilePond.create(document.querySelector('.filepond'), {
+        name: 'images[]',
         allowMultiple: true,
         maxFiles: 5, // opsional, batas maksimal
         instantUpload: false, // jika ingin upload saat submit form
@@ -226,8 +220,14 @@ use Core\Env;
         fileValidateTypeLabelExpectedTypes: 'Format yang diizinkan: PNG, JPG, JPEG, WEBP, GIF'
     });
 
-    $(document).ready(function() {
-
+    $(document).ready(function() {        
+        $('input[name="order_date"]').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD-MM-YYYY'
+            }
+        });
 
         $('.select2').select2();
 
@@ -237,12 +237,21 @@ use Core\Env;
             e.preventDefault();
 
             const formData = new FormData(this);
-            const pond = FilePond.find(document.querySelector('.filepond'));
+            const files = pond.getFiles();
+            files.forEach((file, index) => {
+                formData.append('images[]', file.file, file.filename);
+            });
+            // const pond = FilePond.find(document.querySelector('.filepond'));
             // const files = pond.getFiles();
             // files.forEach((file, index) => {
             //     formData.append('images[]', file.file);
             // });
 
+            // console.log(pond.getFiles());
+
+
+            console.log(formData);
+            
 
             $.ajax({
                 url: '<?= Env::get('BASE_URL') ?>/sales-order/store',
@@ -251,11 +260,11 @@ use Core\Env;
                 dataType: 'json',
                 contentType: false,
                 processData: false,
-                ajaxStart: function() {
-                    $('#overlay').fadeIn(100);
+                beforeSend: function() {
+                    $('#overlay').removeClass('d-none');
                 },
-                ajaxStop: function() {
-                    $('#overlay').fadeOut(100);
+                complete: function() {
+                    $('#overlay').addClass('d-none');
                 },
                 success: function(res) {
                     Toast.fire({
@@ -264,8 +273,12 @@ use Core\Env;
                     });
                     window.location.href = res.redirect;
                 },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
+                error: function(xhr, textStatus, errorThrown) {
+                    // Handle error
+                    $('#overlay').addClass('d-none');
+                    // Display error message or perform other error handling tasks
+                    console.error('AJAX error:', textStatus, errorThrown);
+                    console.log('Response:', xhr.responseText);
                     const err = JSON.parse(xhr.responseText);
                     
                     Toast.fire({

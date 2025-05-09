@@ -29,7 +29,7 @@ $user = Auth::user();
     <!-- </div> -->
 </div>
 
-<div id="overlay">
+<div id="overlay" class="d-none">
     <div class="spinner-border text-primary" role="status">
         <span class="sr-only">Loading...</span>
     </div>

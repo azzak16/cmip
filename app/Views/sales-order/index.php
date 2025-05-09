@@ -63,6 +63,7 @@ use Core\Env;
 
                     var html = `<div>
                                     <a href="<?= Env::get('BASE_URL') ?>/sales-order/edit/${row.id}" class="btn btn-sm btn-outline-info btn-edit" ><i class="fas fa-pencil"></i></a>
+                                    <a href="<?= Env::get('BASE_URL') ?>/sales-order/view/${row.id}" class="btn btn-sm btn-outline-warning btn-view" ><i class="fas fa-eye"></i></a>
                                     <a class="btn btn-sm btn-outline-danger btn-delete" data-id="${row.id}"><i class="fas fa-trash"></i></a>
                                     <a href="<?= Env::get('BASE_URL') ?>/sales-order/print/${row.id}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-print"></i></a>
                                 </div>`;

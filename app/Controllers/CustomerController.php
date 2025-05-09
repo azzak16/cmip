@@ -127,12 +127,12 @@ class CustomerController extends Controller
 
         try {
 
-            $this->customer->update($id, [
+            $this->customer->update([
                 'CS_NAMA' => $_POST['CS_NAMA'],
                 'CS_KODE' => $_POST['CS_KODE'],
                 'CS_ALAMAT' => $_POST['CS_ALAMAT'],
                 'NOTES' => $_POST['NOTES'],
-            ], 'NO_ID');
+            ], $id, 'NO_ID');
 
             $db->commit();
             echo json_encode([

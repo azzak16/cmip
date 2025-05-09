@@ -43,7 +43,7 @@ abstract class Model
         return $this->db->lastInsertId();
     }
 
-    public function update($id, array $data, $type = 'id')
+    public function update(array $data, $id,  $type = 'id')
     {
         $fields = '';
         foreach ($data as $key => $val) {

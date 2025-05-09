@@ -1,6 +1,7 @@
 <?php 
 namespace App\Controllers;
 
+use App\Models\Images;
 use App\Models\Product;
 use App\Models\SalesOrder;
 use App\Models\SalesOrderItem;
@@ -49,23 +50,23 @@ class SalesOrderController extends Controller
 
     public function store()
     {
-// print_r($_POST);
-// die();
+        
         $db = Database::getInstance();
         $db->beginTransaction();
 
-        $orde_number = $this->sales_order->number($_POST['order_date']);
-        $production_code = $this->sales_order->code($_POST['customer_id'], $_POST['order_date']);
+        $date = date('Y-m-d', strtotime($_POST['order_date']));
+
+        $orde_number = $this->sales_order->number($date);
+        $production_code = $this->sales_order->code($_POST['customer_id'], $date);
 
         try {
 
             $so_id = $this->sales_order->insert([
-                // 'tenant_id' => Auth::user()['tenant_id'],
                 'customer_id' => $_POST['customer_id'],
                 'karat' => $_POST['karat_id'],
                 'production_code' => $_POST['production_code']?: $production_code,
                 'order_number' => $_POST['order_number']?: $orde_number,
-                'order_date' => $_POST['order_date'],
+                'order_date' => $date,
                 'payment_terms' => $_POST['payment_terms'],
                 'delivery_plan' => $_POST['delivery_plan'],
                 'manager_production' => $_POST['manager_production'],
@@ -78,7 +79,7 @@ class SalesOrderController extends Controller
             foreach ($_POST['product_desc'] as $key => $value) {
                 $model_item = new SalesOrderItem();
                 $model_item->insert([
-                    'sales_order_number' => $_POST['order_number']?: $orde_number,
+                    'sales_order_id' => $so_id,
                     'product_desc' => $_POST['product_desc'][$key],
                     'ukuran_pcs' => $_POST['ukuran_pcs'][$key],
                     'panjang_pcs' => $_POST['panjang_pcs'][$key],
@@ -98,56 +99,53 @@ class SalesOrderController extends Controller
                 }
             }
 
-print_r($_FILES['images']);
-            die();
-$extension=array("jpeg","jpg","png","gif");
-foreach($_FILES["images"]["name"] as $key=>$tmp_name) {
-    $file_name=$_FILES["images"]["name"][$key];
-    $file_tmp=$_FILES["images"]["tmp_name"][$key];
-    $ext=pathinfo($file_name,PATHINFO_EXTENSION);
+            // Proses upload gambar
+            $uploadDir = ROOT_PATH . 'public/images/so/';
+            $allowedTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+            $maxSize = 2 * 1024 * 1024; // 2MB
+            $uploadedFiles = [];
+            $errors = [];
 
-    if(in_array($ext,$extension)) {
-        // if(!file_exists(ROOT_PATH . 'storage/uploads/'.$file_name)) {
-        //     move_uploaded_file($file_tmp=$_FILES["images"]["tmp_name"][$key],ROOT_PATH . 'storage/uploads/'.$file_name);
-        // }
-        // else {
-            // $filename=basename($file_name,$ext);
-            $newFileName=time().".".$ext;
-            move_uploaded_file($file_tmp=$_FILES["images"]["tmp_name"][$key],ROOT_PATH . 'storage/uploads/'.$newFileName);
-        // }
-    }
-    else {
-        array_push($error,"$file_name, ");
-    }
-}
+            if (isset($_FILES['images']) && $_FILES['images']['error'][0] !== UPLOAD_ERR_NO_FILE) {
+                $files = $_FILES['images'];
+                $fileCount = count($files['name']);
 
+                for ($i = 0; $i < $fileCount; $i++) {
 
-            // Simpan file upload
-        // if (!empty($_FILES['images'])) {
-        //     $uploadDir = ROOT_PATH . 'storage/uploads/';
+                    $ext = pathinfo($files['name'][$i],PATHINFO_EXTENSION);
 
-        //     foreach ($_FILES['images'] as $file) {
-        //         print_r($file);
-        //         die();
-        //         $newFilename = Str::after($file, 'tmp/');
-        //         Storage::disk('public')->move($file, "images/$newFilename");
-        //         $newFiles[] = ['image' => "images/$newFilename"];
-        //     }
+                    $fileName = uniqid() . '.' . $ext;
+                    $filePath = $uploadDir . $fileName;
+                    $fileType = $files['type'][$i];
+                    $fileSize = $files['size'][$i];
+                    $fileError = $files['error'][$i];
 
-        //     foreach ($_FILES['images']['tmp_name'] as $index => $tmpName) {
-        //         $originalName = $_FILES['images']['name'];
-        //         $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+                    // Validasi
+                    if (!in_array($fileType, $allowedTypes)) {
+                        $errors[] = "File {$files['name'][$i]}: Tipe file tidak diizinkan.";
+                    } elseif ($fileSize > $maxSize) {
+                        $errors[] = "File {$files['name'][$i]}: Ukuran file terlalu besar.";
+                    } elseif ($fileError !== UPLOAD_ERR_OK) {
+                        $errors[] = "File {$files['name'][$i]}: Gagal mengunggah.";
+                    } else {
+                        if (move_uploaded_file($files['tmp_name'][$i], $filePath)) {
+                            // Simpan ke database
+                            $upload_image = new Images;
+                            $upload_image->addImage('sales_order_images', 'sales_order_id', $so_id, $fileName);
+                            
+                            $uploadedFiles[] = $fileName;
+                        } else {
+                            $errors[] = "File {$files['name'][$i]}: Gagal menyimpan file.";
+                        }
+                    }
+                }
+            }
 
-        //         $name = time().'.'.$extension;
-
-        //         $target = $uploadDir . $name;
-        //         move_uploaded_file($tmpName, $target);
-        //         // if () {
-        //         //     // Simpan ke DB jika perlu
-        //         //     // $this->salesOrderFile->insert(['sales_order_id' => $salesOrderId, 'file_path' => $target]);
-        //         // }
-        //     }
-        // }
+            if (!empty($errors)) {
+                $respon = implode('<br>', $errors);
+                print_r($respon);
+                throw new Exception($respon);
+            }
 
             $db->commit();
             echo json_encode([
@@ -169,15 +167,29 @@ foreach($_FILES["images"]["name"] as $key=>$tmp_name) {
     public function edit($id)
     {
         $result = $this->sales_order->raw(
-            "SELECT *
+            "SELECT sales_orders.*, customers.CS_NAMA, customers.CS_KODE
                 FROM sales_orders
-                left join sales_order_items on sales_orders.order_number = sales_order_items.sales_order_number
+                left join customers on sales_orders.customer_id = customers.NO_ID
                 WHERE sales_orders.id = $id"
         );
+        $this->data['sales_orders'] = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $items = $result->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($items);
-        die();
+        $result = $this->sales_order->raw(
+            "SELECT *
+                FROM sales_order_items
+                WHERE sales_order_id = $id"
+        );
+        $this->data['sales_order_items'] = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $result = $this->sales_order->raw(
+            "SELECT *
+                FROM sales_order_images
+                WHERE sales_order_id = $id"
+        );
+        $this->data['sales_order_images'] = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        // print_r($this->data['sales_orders'][0]['id']);
+        // die();
 
         $this->view('sales-order/edit', $this->data, 'layouts/main');
     }
@@ -195,13 +207,50 @@ foreach($_FILES["images"]["name"] as $key=>$tmp_name) {
         $db = Database::getInstance();
         $db->beginTransaction();
 
-        try {
+        $date = date('Y-m-d', strtotime($_POST['order_date']));
 
+        $orde_number = $this->sales_order->number($date);
+        $production_code = $this->sales_order->code($_POST['customer_id'], $date);
+
+        try {
             
-            $this->sales_order->update($id, [
-                'name' => $_POST['name'],
-                'description' => $_POST['description']
-            ]);
+            $this->sales_order->update([
+                'customer_id' => $_POST['customer_id'],
+                'karat' => $_POST['karat_id'],
+                'production_code' => $_POST['production_code']?:$production_code,
+                'order_number' => $_POST['order_number']?:$orde_number,
+                'order_date' => $date,
+                'payment_terms' => $_POST['payment_terms'],
+                'delivery_plan' => $_POST['delivery_plan'],
+                'manager_production' => $_POST['manager_production'],
+                'ppic' => $_POST['ppic'],
+                'head_sales' => $_POST['head_sales'],
+                'order_recipient' => $_POST['order_recipient'],
+                'status' => $_POST['status'],
+            ], $id);
+
+            foreach ($_POST['product_desc'] as $key => $value) {
+                $model_item = new SalesOrderItem();
+                $model_item->update([
+                    'sales_order_id' => $id,
+                    'product_desc' => $_POST['product_desc'][$key],
+                    'ukuran_pcs' => $_POST['ukuran_pcs'][$key],
+                    'panjang_pcs' => $_POST['panjang_pcs'][$key],
+                    'gram_pcs' => $_POST['gram_pcs'][$key],
+                    'batu_pcs' => $_POST['batu_pcs'][$key],
+                    'tok_pcs' => $_POST['tok_pcs'][$key],
+                    'color' => $_POST['color'][$key],
+                    'karat' => $_POST['karat_id'],
+                    'pcs' => $_POST['pcs'][$key],
+                    'pairs' => $_POST['pairs'][$key],
+                    'gram' => $_POST['gram'][$key],
+                    'notes' => $_POST['note'][$key],
+                ], $_POST['item_id'][$key]);
+
+                if (!$model_item) {
+                    throw new Exception("Gagal menyimpan item ke-$key.");
+                }
+            }
 
             $db->commit();
             echo json_encode([

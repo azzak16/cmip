@@ -51,7 +51,7 @@ CREATE TABLE products (
 DROP TABLE IF EXISTS sales_order_items;
 CREATE TABLE sales_order_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    sales_order_number VARCHAR(50) NOT NULL,
+    sales_order_id INT NOT NULL,
     product_id INT NULL,
     product_desc VARCHAR(50) NULL,
     ukuran_pcs VARCHAR(50) NULL,
@@ -69,6 +69,17 @@ CREATE TABLE sales_order_items (
     deleted_at DATETIME DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (sales_order_number) REFERENCES sales_orders(order_number),
+    FOREIGN KEY (sales_order_id) REFERENCES sales_orders(id),
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
+
+CREATE TABLE `sales_order_images` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `file_name` varchar(255) NOT NULL,
+  `sales_order_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `sales_order_id` (`sales_order_id`),
+  CONSTRAINT `sales_order_images_ibfk_1` FOREIGN KEY (`sales_order_id`) REFERENCES `sales_orders` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;

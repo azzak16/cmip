@@ -52,6 +52,7 @@ class SalesOrder extends Model
         $dates = explode('-', $date);
 
         $years = $dates[0];
+        $year = substr($years, 2, 2);
     
         $months = $dates[1];
 
@@ -69,10 +70,10 @@ class SalesOrder extends Model
         $stmt->execute();
         $data_so = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $code = 'L CRA9-0101';
+        $code = '';
 
         if (empty($data_so)) {
-            $code = $data_cs[0]['CS_KODE']."-01{$months}";
+            $code = $data_cs[0]['CS_KODE']."-01{$months}{$year}";
         } else {
             
             $parts = explode('-', $data_so[0]['production_code']);
@@ -80,7 +81,7 @@ class SalesOrder extends Model
             $angka = $angka + 1;
             $angka = str_pad($angka, 2, '0', STR_PAD_LEFT);
 
-            $code = $data_cs[0]['CS_KODE']."-{$angka}{$months}";
+            $code = $data_cs[0]['CS_KODE']."-{$angka}{$months}{$year}";
         }
         
         return $code;
