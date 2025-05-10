@@ -349,15 +349,10 @@ use Core\Env;
 
     $('body').on('click', '.btn-delete', function() {
         var r = confirm("Yakin dihapus?");
-        if (r == true) {
-            if (idrow > 1) {
-                var val = $(this).parents("tr").remove();
-                idrow--;
-                nomor();
-                // hitung();
-            }
-        } else {
-            hitung();
+        if (idrow > 1) {
+            var val = $(this).parents("tr").remove();
+            idrow--;
+            // hitung();
         }
     });
 

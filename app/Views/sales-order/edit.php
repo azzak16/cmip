@@ -196,20 +196,43 @@ use Core\Env;
 
 
 <script>
+
+    let deletedImages = [];
+    let deletedItems = [];
+
     
     FilePond.registerPlugin(
         FilePondPluginImagePreview,
         FilePondPluginFileValidateType
     );
+
     const pond = FilePond.create(document.querySelector('.filepond'), {
         name: 'images[]',
         allowMultiple: true,
-        maxFiles: 5, // opsional, batas maksimal
-        instantUpload: false, // jika ingin upload saat submit form
-        // allowFileEncode: false,
+        maxFiles: 5,
+        instantUpload: false,
         acceptedFileTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/gif'],
         labelFileTypeNotAllowed: 'Hanya gambar yang diizinkan.',
-        fileValidateTypeLabelExpectedTypes: 'Format yang diizinkan: PNG, JPG, JPEG, WEBP, GIF'
+        fileValidateTypeLabelExpectedTypes: 'Format yang diizinkan: PNG, JPG, JPEG, WEBP, GIF',
+        files: [
+            <?php foreach ($data['sales_order_images'] as $image): ?>
+            {
+                source: '<?= Env::get('BASE_URL') ?>/images/so/<?= $image['file_name'] ?>',
+                options: {
+                    type: 'remote',
+                    metadata: {
+                        imageId: <?= $image['id'] ?>
+                    }
+                }
+            },
+            <?php endforeach; ?>
+        ],
+        allowRemove: true,
+        onremovefile: (error, file) => {
+            if (!error && file.getMetadata('imageId')) {
+                deletedImages.push(file.getMetadata('imageId'));
+            }
+        }
     });
 
     $(document).ready(function() {        
@@ -233,6 +256,8 @@ use Core\Env;
             files.forEach((file, index) => {
                 formData.append('images[]', file.file, file.filename);
             });
+            formData.append('deleted_images', JSON.stringify(deletedImages));
+            formData.append('deleted_items', JSON.stringify(deletedItems));
 
             var id = $("input[name=id]").val();
 
@@ -327,17 +352,21 @@ use Core\Env;
 
 
     });
-
-    var idrow = 1;
+    
+    var idrow = $('#datatable > tbody > tr').length;
 
     $('body').on('click', '.btn-delete', function() {
         var r = confirm("Yakin dihapus?");
         if (r == true) {
-            if (idrow > 1) {
-                var val = $(this).parents("tr").remove();
-                idrow--;
-            }
+            var val = $(this).parents("tr").remove();
+            idrow--;
         }
+
+        var id = $(this).parents("tr").find("input[name='item_id[]']").val();
+        if (id != '') {
+            deletedItems.push(id);
+        }
+
     });
 
     function hapus() {
