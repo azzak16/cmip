@@ -1,32 +1,46 @@
-<div class="bg-dark text-white position-fixed h-100 sidebar" id="sidebar">
-    <div class="p-3 d-flex align-items-center justify-content-between">
-        <span class="font-weight-bold">CMIP</span>
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="../../index3.html" class="brand-link">
+        <!-- <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> -->
+        <span class="brand-text font-weight-light">AdminLTE 3</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Dashboard
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?= \Core\Env::get('BASE_URL') ?>/sales-order" class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Sales Order
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?= \Core\Env::get('BASE_URL') ?>/customer" class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Customer
+                        </p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
     </div>
-    <ul class="nav flex-column px-2">
-        <li class="nav-item">
-            <a href="<?= \Core\Env::get('BASE_URL') ?>/dashboard" class="nav-link text-white">
-                <i class="fas fa-tachometer-alt"></i> <span class="menu-text">Dashboard</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="<?= \Core\Env::get('BASE_URL') ?>/products" class="nav-link text-white">
-                <i class="fas fa-box"></i> <span class="menu-text">Product</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="<?= \Core\Env::get('BASE_URL') ?>/customer" class="nav-link text-white">
-                <i class="fas fa-box"></i> <span class="menu-text">Customer</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="<?= \Core\Env::get('BASE_URL') ?>/sales-order" class="nav-link text-white">
-                <i class="fas fa-box"></i> <span class="menu-text">Saless Order</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="/logout" class="nav-link text-white">
-                <i class="fas fa-sign-out-alt"></i> <span class="menu-text">Logout</span>
-            </a>
-        </li>
-    </ul>
-</div>
+    <!-- /.sidebar -->
+</aside>

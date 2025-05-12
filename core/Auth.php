@@ -5,10 +5,13 @@ use App\Models\User;
 
 class Auth
 {
-    public static function attempt($email, $password)
+    public static function attempt($username, $password)
     {
         $userModel = new User();
-        $user = $userModel->findByEmail($email);
+        $user = $userModel->findByUser($username);
+        
+        print_r($user);
+        die();
 
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user'] = [

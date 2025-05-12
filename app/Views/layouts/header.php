@@ -4,6 +4,7 @@ use Core\Env;
 ?>
 
 
+<link rel="stylesheet" href="<?= Env::get('BASE_URL') ?>/assets/AdminLTE-3.2.0/dist/css/adminlte.min.css">
 <link rel="stylesheet" href="<?= Env::get('BASE_URL') ?>/assets/bootstrap-4/css/bootstrap.min.css">
 <link rel="stylesheet" href="<?= Env::get('BASE_URL') ?>/assets/fontawesome-6/css/all.min.css">
 <link rel="stylesheet" href="<?= Env::get('BASE_URL') ?>/assets/sweetalert2/dist/sweetalert2.min.css">
@@ -15,6 +16,7 @@ use Core\Env;
 
 
 <script src="<?= Env::get('BASE_URL') ?>/assets/jquery/jquery-3.7.1.min.js"></script>
+<script src="<?= Env::get('BASE_URL') ?>/assets/AdminLTE-3.2.0/dist/js/adminlte.min.js"></script>
 <script src="<?= Env::get('BASE_URL') ?>/assets/bootstrap-4/js/bootstrap.bundle.min.js"></script>
 <script src="<?= Env::get('BASE_URL') ?>/assets/DataTables/datatables.min.js"></script>
 <script src="<?= Env::get('BASE_URL') ?>/assets/sweetalert2/dist/sweetalert2.all.min.js"></script>

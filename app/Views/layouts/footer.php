@@ -1,5 +1,6 @@
-<!-- <footer class="bg-dark text-white text-center py-3 mt-auto">
-    <div class="container">
-        <p>© 2025 Inventory System. All rights reserved.</p>
+<footer class="main-footer">
+    <div class="float-right d-none d-sm-block">
+        <b>Version</b> 3.2.0
     </div>
-</footer> -->
+    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+</footer>

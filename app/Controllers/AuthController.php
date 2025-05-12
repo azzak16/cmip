@@ -16,13 +16,13 @@ class AuthController extends Controller
 
     public function login()
     {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
+        $username = $_POST['username'];
+        $password = hash('sha256', $_POST['password']);
 
-        if (Auth::attempt($email, $password)) {
+        if (Auth::attempt($username, $password)) {
             $this->redirect('/');
         } else {
-            $_SESSION['error'] = 'Email atau Password salah!';
+            $_SESSION['error'] = 'Username atau Password salah!';
             $this->redirect('/login');
         }
     }

@@ -14,4 +14,11 @@ class User extends Model
         $stmt->execute(['email' => $email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function findByUser($user)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE USERNAME = '{$user}' LIMIT 1");
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
