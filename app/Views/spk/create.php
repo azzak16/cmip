@@ -127,7 +127,7 @@ use Core\Env;
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <input name="product_desc[]" id="product_desc" type="text"class="form-control form-control-sm" required>
+                                                <input name="product_desc[]" id="product_desc" type="text"class="form-control form-control-sm" >
                                             </td>
                                             <td>
                                                 <input name="ukuran_pcs[]" id="ukuran_pcs" type="text"class="form-control form-control-sm" >
@@ -160,7 +160,7 @@ use Core\Env;
                                                 <input name="gram[]" id="gram" type="number" class="form-control form-control-sm" step="any" value="0">
                                             </td>
                                             <td>
-                                                <textarea name="note[]" id="note" type="text"class="form-control form-control-sm" ></textarea>
+                                                <input name="note[]" id="note" type="text"class="form-control form-control-sm" >
                                             </td>
                                             <td class="text-center">
                                                 <input type="hidden" value="0" name="NO_ID[]" id="NO_ID0" class="form-control form-control-sm"> 
@@ -376,7 +376,7 @@ use Core\Env;
 
         td12.className = 'text-center';
 
-        td01.innerHTML = "<input name='product_desc[]' id=product_desc" + idrow + " type='text' class='form-control form-control-sm' required>";
+        td01.innerHTML = "<input name='product_desc[]' id=product_desc" + idrow + " type='text' class='form-control form-control-sm'>";
         td02.innerHTML = "<input name='ukuran_pcs[]' id=ukuran_pcs" + idrow + " type='text' class='form-control form-control-sm'>";
         td03.innerHTML = "<input name='panjang_pcs[]' id=panjang_pcs" + idrow + " type='text' class='form-control form-control-sm'>";
         td04.innerHTML = "<input name='gram_pcs[]' id=gram_pcs" + idrow + " type='text' class='form-control form-control-sm' step='any' value='0'>";
@@ -387,7 +387,7 @@ use Core\Env;
         td08.innerHTML = "<input name='pcs[]' id=pcs" + idrow + " type='text' class='form-control form-control-sm' step='any' value='0'>";
         td09.innerHTML = "<input name='pairs[]' id=pairs" + idrow + " type='text' class='form-control form-control-sm' step='any' value='0'>";
         td10.innerHTML = "<input name='gram[]' id=gram" + idrow + " type='text' class='form-control form-control-sm' step='any' value='0'>";
-        td11.innerHTML = "<textarea name='note[]' id=note" + idrow + " type='text' class='form-control form-control-sm'></textarea>";
+        td11.innerHTML = "<input name='note[]' id=note" + idrow + " type='text' class='form-control form-control-sm'>";
         td12.innerHTML = "<input type='hidden' value='0' name='NO_ID[]' id=NO_ID" + idrow + "  class='form-control form-control-sm'>" +
             " <button type='button' class='btn btn-sm btn-circle btn-outline-danger btn-delete' onclick=''> <i class='fa fa-fw fa-trash'></i> </button>";
 

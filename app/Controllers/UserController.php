@@ -5,6 +5,7 @@ use App\Models\Images;
 use App\Models\Product;
 use App\Models\SalesOrder;
 use App\Models\SalesOrderItem;
+use App\Models\User;
 use Core\Controller;
 use Core\Validator;
 use Core\Auth;
@@ -14,9 +15,9 @@ use Core\Model;
 use Exception;
 use PDO;
 
-class SalesOrderController extends Controller
+class UserController extends Controller
 {
-    private $sales_order;
+    private $user;
     private $data;
 
     public function __construct()
@@ -24,33 +25,33 @@ class SalesOrderController extends Controller
         if (!Auth::check()) {
             $this->redirect('/cmip/login');
         }
-
-        $this->sales_order = new SalesOrder();
+        
+        $this->user = new User();
         $this->data = [
-            'title' => 'Sales Order',
+            'title' => 'User',
         ];
     }
 
     public function index()
     {
-        $this->view('sales-order/index', $this->data, 'layouts/main');
+        $this->view('user/index', $this->data, 'layouts/main');
     }
 
     public function ajaxList()
     {
         header('Content-Type: application/json');
-        echo json_encode($this->sales_order->all());
+        echo json_encode($this->user->all());
     }
 
     public function data()
     {
-        $sales_orders = $this->sales_order->all();
-        echo json_encode(['data' => $sales_orders]);
+        $users = $this->user->all();
+        echo json_encode(['data' => $users]);
     }
 
     public function create()
     {
-        $this->view('sales-order/create', $this->data, 'layouts/main');
+        $this->view('user/create', $this->data, 'layouts/main');
     }
 
     public function store()
@@ -59,23 +60,14 @@ class SalesOrderController extends Controller
         $db = Database::getInstance();
         $db->beginTransaction();
 
+        $date = date('Y-m-d', strtotime($_POST['order_date']));
+
+        $orde_number = $this->user->number($date);
+        $production_code = $this->user->code($_POST['customer_id'], $date);
+
         try {
 
-            $errors = Validator::validate($_POST, [
-                'customer_id' => 'required',
-                'karat_id' => 'required'
-            ]);
-    
-            if ($errors) {
-                throw new \Exception(json_encode($errors));
-            }
-            
-            $date = date('Y-m-d', strtotime($_POST['order_date']));
-
-            $orde_number = $this->sales_order->number($date);
-            $production_code = $this->sales_order->code($_POST['customer_id'], $date);
-
-            $so_id = $this->sales_order->insert([
+            $so_id = $this->user->insert([
                 'customer_id' => $_POST['customer_id'],
                 'karat' => $_POST['karat_id'],
                 'production_code' => $_POST['production_code']?: $production_code,
@@ -93,7 +85,7 @@ class SalesOrderController extends Controller
             foreach ($_POST['product_desc'] as $key => $value) {
                 $model_item = new SalesOrderItem();
                 $model_item->insert([
-                    'sales_order_id' => $so_id,
+                    'user_id' => $so_id,
                     'product_desc' => $_POST['product_desc'][$key],
                     'ukuran_pcs' => $_POST['ukuran_pcs'][$key],
                     'panjang_pcs' => $_POST['panjang_pcs'][$key],
@@ -149,7 +141,7 @@ class SalesOrderController extends Controller
                         if (move_uploaded_file($files['tmp_name'][$i], $filePath)) {
                             // Simpan ke database
                             $upload_image = new Images;
-                            $upload_image->addImage('sales_order_images', 'sales_order_id', $so_id, $fileName);
+                            $upload_image->addImage('user_images', 'user_id', $so_id, $fileName);
                             
                             $uploadedFiles[] = $fileName;
                         } else {
@@ -161,6 +153,7 @@ class SalesOrderController extends Controller
 
             if (!empty($errors)) {
                 $respon = implode('<br>', $errors);
+                print_r($respon);
                 throw new Exception($respon);
             }
 
@@ -168,7 +161,7 @@ class SalesOrderController extends Controller
             echo json_encode([
                 'status' => true, 
                 'message' => 'Sales Order berhasil disimpan.',
-                'redirect' => Env::get('BASE_URL') . '/sales-order'
+                'redirect' => Env::get('BASE_URL') . '/user'
             ], JSON_UNESCAPED_SLASHES);
 
         } catch (Exception $e) {
@@ -183,36 +176,36 @@ class SalesOrderController extends Controller
 
     public function edit($id)
     {
-        $result = $this->sales_order->raw(
-            "SELECT sales_orders.*, customers.CS_NAMA, customers.CS_KODE
-                FROM sales_orders
-                left join customers on sales_orders.customer_id = customers.NO_ID
-                WHERE sales_orders.id = $id"
+        $result = $this->user->raw(
+            "SELECT users.*, customers.CS_NAMA, customers.CS_KODE
+                FROM users
+                left join customers on users.customer_id = customers.NO_ID
+                WHERE users.id = $id"
         );
-        $this->data['sales_orders'] = $result->fetchAll(PDO::FETCH_ASSOC);
+        $this->data['users'] = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $result = $this->sales_order->raw(
+        $result = $this->user->raw(
             "SELECT *
-                FROM sales_order_items
-                WHERE sales_order_id = $id"
+                FROM user_items
+                WHERE user_id = $id"
         );
-        $this->data['sales_order_items'] = $result->fetchAll(PDO::FETCH_ASSOC);
+        $this->data['user_items'] = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $result = $this->sales_order->raw(
+        $result = $this->user->raw(
             "SELECT *
-                FROM sales_order_images
-                WHERE sales_order_id = $id"
+                FROM user_images
+                WHERE user_id = $id"
         );
-        $this->data['sales_order_images'] = $result->fetchAll(PDO::FETCH_ASSOC);
+        $this->data['user_images'] = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $this->view('sales-order/edit', $this->data, 'layouts/main');
+        $this->view('user/edit', $this->data, 'layouts/main');
     }
 
     public function print($id)
     {
-        $this->data['sales_order'] = $this->sales_order->find($id);
+        $this->data['user'] = $this->user->find($id);
 
-        $this->view('sales-order/print', $this->data, 'layouts/main');
+        $this->view('user/print', $this->data, 'layouts/main');
     }
     
 
@@ -224,15 +217,15 @@ class SalesOrderController extends Controller
         
         $date = date('Y-m-d', strtotime($_POST['order_date']));
         
-        $orde_number = $this->sales_order->number($date);
-        $production_code = $this->sales_order->code($_POST['customer_id'], $date);
+        $orde_number = $this->user->number($date);
+        $production_code = $this->user->code($_POST['customer_id'], $date);
 
         $deletedItems = json_decode($_POST['deleted_items'] ?? '[]', true);
         $deletedImages = json_decode($_POST['deleted_images'] ?? '[]', true);
 
         try {
             
-            $this->sales_order->update([
+            $this->user->update([
                 'customer_id' => $_POST['customer_id'],
                 'karat' => $_POST['karat_id'],
                 'production_code' => $_POST['production_code']?:$production_code,
@@ -249,7 +242,7 @@ class SalesOrderController extends Controller
 
             // deleted items
             if (!empty($deletedItems)) {
-                $this->sales_order->raw("DELETE FROM sales_order_items WHERE id IN (" . implode(',', $deletedItems) . ") AND sales_order_id = $id");                
+                $this->user->raw("DELETE FROM user_items WHERE id IN (" . implode(',', $deletedItems) . ") AND user_id = $id");                
             }
 
             foreach ($_POST['product_desc'] as $key => $value) {
@@ -257,7 +250,7 @@ class SalesOrderController extends Controller
                 if (isset($_POST['item_id'][$key])) {
                     $model_item = new SalesOrderItem();
                     $model_item->update([
-                        'sales_order_id' => $id,    
+                        'user_id' => $id,    
                         'product_desc' => $_POST['product_desc'][$key],
                         'ukuran_pcs' => $_POST['ukuran_pcs'][$key],
                         'panjang_pcs' => $_POST['panjang_pcs'][$key],
@@ -274,7 +267,7 @@ class SalesOrderController extends Controller
                 }else{
                     $model_item = new SalesOrderItem();
                     $model_item->insert([
-                        'sales_order_id' => $id,
+                        'user_id' => $id,
                         'product_desc' => $_POST['product_desc'][$key],
                         'ukuran_pcs' => $_POST['ukuran_pcs'][$key],
                         'panjang_pcs' => $_POST['panjang_pcs'][$key],
@@ -297,10 +290,10 @@ class SalesOrderController extends Controller
             }
 
             if (!empty($deletedImages)) {
-                $stmt = $this->sales_order->raw("SELECT file_name FROM sales_order_images WHERE id IN (" . implode(',', $deletedImages) . ") AND sales_order_id = $id");
+                $stmt = $this->user->raw("SELECT file_name FROM user_images WHERE id IN (" . implode(',', $deletedImages) . ") AND user_id = $id");
                 $filesToDelete = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-                $stmt = $this->sales_order->raw("DELETE FROM sales_order_images WHERE id IN (" . implode(',', $deletedImages) . ") AND sales_order_id = $id");
+                $stmt = $this->user->raw("DELETE FROM user_images WHERE id IN (" . implode(',', $deletedImages) . ") AND user_id = $id");
 
                 $uploadDir = realpath(ROOT_PATH . 'public/images/so/') . '/';
                 foreach ($filesToDelete as $file) {
@@ -329,7 +322,7 @@ class SalesOrderController extends Controller
 
                 for ($i = 0; $i < $fileCount; $i++) {
 
-                    $stmt = $this->sales_order->raw("SELECT file_name FROM sales_order_images WHERE file_name = '" . $files['name'][$i] . "'  AND sales_order_id = $id");
+                    $stmt = $this->user->raw("SELECT file_name FROM user_images WHERE file_name = '" . $files['name'][$i] . "'  AND user_id = $id");
                     $check = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
                     if (!$check) {
@@ -352,7 +345,7 @@ class SalesOrderController extends Controller
                             if (move_uploaded_file($files['tmp_name'][$i], $filePath)) {
                                 // Simpan ke database
                                 $upload_image = new Images;
-                                $upload_image->addImage('sales_order_images', 'sales_order_id', $id, $fileName);
+                                $upload_image->addImage('user_images', 'user_id', $id, $fileName);
                                 
                                 $uploadedFiles[] = $fileName;
                             } else {
@@ -374,7 +367,7 @@ class SalesOrderController extends Controller
             echo json_encode([
                 'status' => true, 
                 'message' => 'Sales Order berhasil dirubah.',
-                'redirect' => Env::get('BASE_URL') . '/sales-order'
+                'redirect' => Env::get('BASE_URL') . '/user'
             ], JSON_UNESCAPED_SLASHES);
 
         } catch (Exception $e) {
@@ -387,7 +380,7 @@ class SalesOrderController extends Controller
     public function delete($id)
     {
         try {
-            $this->sales_order->softDelete($id);
+            $this->user->softDelete($id);
             echo json_encode(['status' => true, 'message' => 'Sales Order dihapus']);
         } catch (Exception $e) {
             http_response_code(500);

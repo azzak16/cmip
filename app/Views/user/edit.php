@@ -17,76 +17,65 @@ use Core\Env;
         
                             <div class="form-group col-md-4">
                                 <label class="col-form-label col-form-label-sm" for="customer_id">Customer</label>
-                                <select name="customer_id" id="customer_id" class="form-control form-control-sm customer-select2" ></select>
+                                <input type="hidden" name="id" value="<?= $data['sales_orders'][0]['id'] ?>">
+                                <select name="customer_id" id="customer_id" class="form-control form-control-sm customer-select2" >
+                                    <option value="<?= $data['sales_orders'][0]['customer_id'] ?>"><?= $data['sales_orders'][0]['CS_NAMA'] ?></option>
+                                </select>
                             </div>
-        
-                            <!-- <div class="form-group col-md-4">
-                                <label class="col-form-label col-form-label-sm" for="customer_name">Nama Customer</label>
-                                <input type="text" name="customer_name" id="customer_name" class="form-control form-control-sm" required>
-                            </div>
-        
-                            <div class="form-group col-md-4">
-                                <label class="col-form-label col-form-label-sm" for="customer_code">Kode Customer</label>
-                                <input type="text" name="customer_code" id="customer_code" class="form-control form-control-sm" required>
-                            </div> -->
-        
-                            <!-- <div class="form-group col-md-4">
-                                <label class="col-form-label col-form-label-sm" for="customer_address">Alamat Customer</label>
-                                <textarea name="customer_address" id="customer_address" class="form-control form-control-sm" required></textarea>
-                            </div> -->
         
                             <div class="form-group col-md-4">
                                 <label class="col-form-label col-form-label-sm" for="production_code">Kode Produksi</label>
-                                <input type="text" name="production_code" id="production_code" class="form-control form-control-sm">
+                                <input type="text" name="production_code" id="production_code" class="form-control form-control-sm " value="<?= $data['sales_orders'][0]['production_code'] ?>">
                                 <small class="text-muted" style="font-size: 12px;">Jika dikosongi maka kode produksi akan otomatis</small>
                             </div>
                             <div class="form-group col-md-4">
                                 <label class="col-form-label col-form-label-sm" for="order_number">Nomor Order</label>
-                                <input type="text" name="order_number" id="order_number" class="form-control form-control-sm">
+                                <input type="text" name="order_number" id="order_number" class="form-control form-control-sm " value="<?= $data['sales_orders'][0]['order_number'] ?>">
                                 <small class="text-muted" style="font-size: 12px;">Jika dikosongi maka nomor so akan otomatis</small>
                             </div>
                             <div class="form-group col-md-4">
                                 <label class="col-form-label col-form-label-sm" for="order_date">Tanggal Order</label>
-                                <input type="text" name="order_date" id="order_date" class="form-control form-control-sm" required>
+                                <input type="text" name="order_date" id="order_date" class="form-control form-control-sm " required value="<?= $data['sales_orders'][0]['order_date'] ?>">
                             </div>
         
                             <div class="form-group col-md-4">
                                 <label class="col-form-label col-form-label-sm" for="payment_terms">Syarat Pembayaran</label>
-                                <input type="text" name="payment_terms" id="payment_terms" class="form-control form-control-sm">
+                                <input type="text" name="payment_terms" id="payment_terms" class="form-control form-control-sm " value="<?= $data['sales_orders'][0]['payment_terms'] ?>">
                             </div>
                             <div class="form-group col-md-4">
                                 <label class="col-form-label col-form-label-sm" for="delivery_plan">Rencana Pengiriman</label>
-                                <input type="text" name="delivery_plan" id="delivery_plan" class="form-control form-control-sm">
+                                <input type="text" name="delivery_plan" id="delivery_plan" class="form-control form-control-sm " value="<?= $data['sales_orders'][0]['delivery_plan'] ?>">
                             </div>
         
                             <div class="form-group col-md-3">
                                 <label class="col-form-label col-form-label-sm" for="manager_production">Manager Produksi</label>
-                                <input type="text" name="manager_production" id="manager_production" class="form-control form-control-sm">
+                                <input type="text" name="manager_production" id="manager_production" class="form-control form-control-sm " value="<?= $data['sales_orders'][0]['manager_production'] ?>">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="col-form-label col-form-label-sm" for="ppic">PPIC</label>
-                                <input type="text" name="ppic" id="ppic" class="form-control form-control-sm">
+                                <input type="text" name="ppic" id="ppic" class="form-control form-control-sm " value="<?= $data['sales_orders'][0]['ppic'] ?>">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="col-form-label col-form-label-sm" for="head_sales">Kabag Penjualan</label>
-                                <input type="text" name="head_sales" id="head_sales" class="form-control form-control-sm">
+                                <input type="text" name="head_sales" id="head_sales" class="form-control form-control-sm " value="<?= $data['sales_orders'][0]['head_sales'] ?>">
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="col-form-label col-form-label-sm" for="order_recipient">Penerima Order</label>
-                                <input type="text" name="order_recipient" id="order_recipient" class="form-control form-control-sm">
+                                <input type="text" name="order_recipient" id="order_recipient" class="form-control form-control-sm " value="<?= $data['sales_orders'][0]['order_recipient'] ?>">
                             </div>
         
-
-                            <div class="form-group col-md-6">
-                                <label class="col-form-label col-form-label-sm col-md-6" style="margin-left: -15px" for="karat_id">Kadar</label>
-                                <select name="karat_id" id="karat_id" class="form-control form-control-sm karat-select2" ></select>
+                            <div class="form-group col-md-4">
+                                <label class="col-form-label col-form-label-sm" for="karat_id">Kadar</label>
+                                <select name="karat_id" id="karat_id" class="form-control form-control-sm karat-select2" >
+                                    <option value="<?= $data['sales_orders'][0]['karat'] ?>"><?= $data['sales_orders'][0]['karat'] ?></option>
+                                </select>
                             </div>
         
-                            <div class="form-group col-md-6">
-                                <label class="col-form-label col-form-label-sm col-md-6" style="margin-left: -15px" for="status">Status</label>
+                            <div class="form-group col-md-4">
+                                <label class="col-form-label col-form-label-sm" for="status">Status</label>
                                 <select name="status" id="status" class="form-control form-control-sm select2" >
-                                    <option value="DRAFT" selected>Draft</option>
-                                    <option value="SPK">SPK</option>
+                                    <option value="DRAFT" <?= ($data['sales_orders'][0]['status']=='DRAFT')?'selected':'' ?>>Draft</option>
+                                    <option value="SPK" <?= ($data['sales_orders'][0]['status']=='SPK')?'selected':'' ?>>SPK</option>
                                 </select>
                             </div>
                         </div>
@@ -125,50 +114,52 @@ use Core\Env;
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php foreach ($data['sales_order_items'] as $key => $value) :?>
                                         <tr>
                                             <td>
-                                                <input name="product_desc[]" id="product_desc" type="text"class="form-control form-control-sm" required>
+                                                <input name="item_id[]" id="item_id" type="hidden"class="form-control form-control-sm " value="<?= $value['id'] ?>">
+                                                <input name="product_desc[]" id="product_desc" type="text"class="form-control form-control-sm " value="<?= $value['product_desc'] ?>">
                                             </td>
                                             <td>
-                                                <input name="ukuran_pcs[]" id="ukuran_pcs" type="text"class="form-control form-control-sm" >
+                                                <input name="ukuran_pcs[]" id="ukuran_pcs" type="text"class="form-control form-control-sm " value="<?= $value['ukuran_pcs'] ?>">
                                             </td>
                                             <td>
-                                                <input name="panjang_pcs[]" id="panjang_pcs" type="text"class="form-control form-control-sm" >
+                                                <input name="panjang_pcs[]" id="panjang_pcs" type="text"class="form-control form-control-sm " value="<?= $value['panjang_pcs'] ?>">
                                             </td>
                                             <td>
-                                                <input name="gram_pcs[]" id="gram_pcs" type="number" class="form-control form-control-sm" step="any" value="0">
+                                                <input name="gram_pcs[]" id="gram_pcs" type="number" class="form-control form-control-sm " step="any" value="<?= $value['gram_pcs'] ?>">
                                             </td>
                                             <td>
-                                                <input name="batu_pcs[]" id="batu_pcs" type="text"class="form-control form-control-sm">
+                                                <input name="batu_pcs[]" id="batu_pcs" type="text"class="form-control form-control-sm " value="<?= $value['batu_pcs'] ?>">
                                             </td>
                                             <td>
-                                                <input name="tok_pcs[]" id="tok_pcs" type="text"class="form-control form-control-sm" >
+                                                <input name="tok_pcs[]" id="tok_pcs" type="text"class="form-control form-control-sm " value="<?= $value['tok_pcs'] ?>">
                                             </td>
                                             <td>
-                                                <input name="color[]" id="color" type="text"class="form-control form-control-sm" >
+                                                <input name="color[]" id="color" type="text"class="form-control form-control-sm " value="<?= $value['color'] ?>">
                                             </td>
                                             <!-- <td>
-                                                <input name="karat[]" id="karat" type="text"class="form-control form-control-sm" >
+                                                <input name="karat[]" id="karat" type="text"class="form-control form-control-sm " >
                                             </td> -->
                                             <td>
-                                                <input name="pcs[]" id="pcs" type="number" class="form-control form-control-sm" step="any" value="0">
+                                                <input name="pcs[]" id="pcs" type="number" class="form-control form-control-sm " step="any" value="<?= $value['pcs'] ?>">
                                             </td>
                                             <td>
-                                                <input name="pairs[]" id="pairs" type="number" class="form-control form-control-sm" step="any" value="0">
+                                                <input name="pairs[]" id="pairs" type="number" class="form-control form-control-sm " step="any" value="<?= $value['pairs'] ?>">
                                             </td>
                                             <td>
-                                                <input name="gram[]" id="gram" type="number" class="form-control form-control-sm" step="any" value="0">
+                                                <input name="gram[]" id="gram" type="number" class="form-control form-control-sm " step="any" value="<?= $value['gram'] ?>">
                                             </td>
                                             <td>
-                                                <textarea name="note[]" id="note" type="text"class="form-control form-control-sm" ></textarea>
+                                                <input name="note[]" id="note" type="text"class="form-control form-control-sm " value="<?= $value['notes'] ?>">
                                             </td>
                                             <td class="text-center">
                                                 <input type="hidden" value="0" name="NO_ID[]" id="NO_ID0" class="form-control form-control-sm"> 
                                                 <button type="button" class="btn btn-sm btn-circle btn-outline-danger btn-delete" onclick=""> <i class="fa fa-fw fa-trash"></i> </button>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td></td>
+                                        
+                                        <?php endforeach; ?>
         
                                     </tbody>
                                 </table>
@@ -208,20 +199,43 @@ use Core\Env;
 
 
 <script>
+
+    let deletedImages = [];
+    let deletedItems = [];
+
     
     FilePond.registerPlugin(
         FilePondPluginImagePreview,
         FilePondPluginFileValidateType
     );
+
     const pond = FilePond.create(document.querySelector('.filepond'), {
         name: 'images[]',
         allowMultiple: true,
-        maxFiles: 5, // opsional, batas maksimal
-        instantUpload: false, // jika ingin upload saat submit form
-        // allowFileEncode: false,
+        maxFiles: 5,
+        instantUpload: false,
         acceptedFileTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/gif'],
         labelFileTypeNotAllowed: 'Hanya gambar yang diizinkan.',
-        fileValidateTypeLabelExpectedTypes: 'Format yang diizinkan: PNG, JPG, JPEG, WEBP, GIF'
+        fileValidateTypeLabelExpectedTypes: 'Format yang diizinkan: PNG, JPG, JPEG, WEBP, GIF',
+        files: [
+            <?php foreach ($data['sales_order_images'] as $image): ?>
+            {
+                source: '<?= Env::get('BASE_URL') ?>/images/so/<?= $image['file_name'] ?>',
+                options: {
+                    type: 'remote',
+                    metadata: {
+                        imageId: <?= $image['id'] ?>
+                    }
+                }
+            },
+            <?php endforeach; ?>
+        ],
+        allowRemove: true,
+        onremovefile: (error, file) => {
+            if (!error && file.getMetadata('imageId')) {
+                deletedImages.push(file.getMetadata('imageId'));
+            }
+        }
     });
 
     $(document).ready(function() {        
@@ -245,9 +259,13 @@ use Core\Env;
             files.forEach((file, index) => {
                 formData.append('images[]', file.file, file.filename);
             });
-            // console.log(formData);
+            formData.append('deleted_images', JSON.stringify(deletedImages));
+            formData.append('deleted_items', JSON.stringify(deletedItems));
+
+            var id = $("input[name=id]").val();
+
             $.ajax({
-                url: '<?= Env::get('BASE_URL') ?>/sales-order/store',
+                url: `<?= Env::get('BASE_URL') ?>/sales-order/update/${id}`,
                 method: 'POST',
                 data: formData,
                 dataType: 'json',
@@ -337,23 +355,27 @@ use Core\Env;
 
 
     });
-
-    var idrow = 1;
+    
+    var idrow = $('#datatable > tbody > tr').length;
 
     $('body').on('click', '.btn-delete', function() {
         var r = confirm("Yakin dihapus?");
-        if (idrow > 1) {
+        if (r == true) {
             var val = $(this).parents("tr").remove();
             idrow--;
-            // hitung();
         }
+
+        var id = $(this).parents("tr").find("input[name='item_id[]']").val();
+        if (id != '') {
+            deletedItems.push(id);
+        }
+
     });
 
     function hapus() {
         if (idrow > 1) {
             var x = document.getElementById('datatable').deleteRow(idrow);
             idrow--;
-            // nomor();
         }
     }
 
@@ -376,18 +398,18 @@ use Core\Env;
 
         td12.className = 'text-center';
 
-        td01.innerHTML = "<input name='product_desc[]' id=product_desc" + idrow + " type='text' class='form-control form-control-sm' required>";
-        td02.innerHTML = "<input name='ukuran_pcs[]' id=ukuran_pcs" + idrow + " type='text' class='form-control form-control-sm'>";
-        td03.innerHTML = "<input name='panjang_pcs[]' id=panjang_pcs" + idrow + " type='text' class='form-control form-control-sm'>";
-        td04.innerHTML = "<input name='gram_pcs[]' id=gram_pcs" + idrow + " type='text' class='form-control form-control-sm' step='any' value='0'>";
-        td05.innerHTML = "<input name='batu_pcs[]' id=batu_pcs" + idrow + " type='text' class='form-control form-control-sm'>";
-        td06.innerHTML = "<input name='tok_pcs[]' id=tok_pcs" + idrow + " type='text' class='form-control form-control-sm'>";
-        td07.innerHTML = "<input name='color[]' id=color" + idrow + " type='text' class='form-control form-control-sm'>";
-        // td08.innerHTML = "<input name='karat[]' id=karat" + idrow + " type='text' class='form-control form-control-sm'>";
-        td08.innerHTML = "<input name='pcs[]' id=pcs" + idrow + " type='text' class='form-control form-control-sm' step='any' value='0'>";
-        td09.innerHTML = "<input name='pairs[]' id=pairs" + idrow + " type='text' class='form-control form-control-sm' step='any' value='0'>";
-        td10.innerHTML = "<input name='gram[]' id=gram" + idrow + " type='text' class='form-control form-control-sm' step='any' value='0'>";
-        td11.innerHTML = "<textarea name='note[]' id=note" + idrow + " type='text' class='form-control form-control-sm'></textarea>";
+        td01.innerHTML = "<input name='product_desc[]' id=product_desc" + idrow + " type='text' class='form-control form-control-sm '>";
+        td02.innerHTML = "<input name='ukuran_pcs[]' id=ukuran_pcs" + idrow + " type='text' class='form-control form-control-sm '>";
+        td03.innerHTML = "<input name='panjang_pcs[]' id=panjang_pcs" + idrow + " type='text' class='form-control form-control-sm '>";
+        td04.innerHTML = "<input name='gram_pcs[]' id=gram_pcs" + idrow + " type='text' class='form-control form-control-sm ' step='any' value='0'>";
+        td05.innerHTML = "<input name='batu_pcs[]' id=batu_pcs" + idrow + " type='text' class='form-control form-control-sm '>";
+        td06.innerHTML = "<input name='tok_pcs[]' id=tok_pcs" + idrow + " type='text' class='form-control form-control-sm '>";
+        td07.innerHTML = "<input name='color[]' id=color" + idrow + " type='text' class='form-control form-control-sm '>";
+        // td08.innerHTML = "<input name='karat[]' id=karat" + idrow + " type='text' class='form-control form-control-sm '>";
+        td08.innerHTML = "<input name='pcs[]' id=pcs" + idrow + " type='text' class='form-control form-control-sm ' step='any' value='0'>";
+        td09.innerHTML = "<input name='pairs[]' id=pairs" + idrow + " type='text' class='form-control form-control-sm ' step='any' value='0'>";
+        td10.innerHTML = "<input name='gram[]' id=gram" + idrow + " type='text' class='form-control form-control-sm ' step='any' value='0'>";
+        td11.innerHTML = "<input name='note[]' id=note" + idrow + " type='text' class='form-control form-control-sm '>";
         td12.innerHTML = "<input type='hidden' value='0' name='NO_ID[]' id=NO_ID" + idrow + "  class='form-control form-control-sm'>" +
             " <button type='button' class='btn btn-sm btn-circle btn-outline-danger btn-delete' onclick=''> <i class='fa fa-fw fa-trash'></i> </button>";
 

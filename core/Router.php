@@ -22,6 +22,15 @@ class Router
         $this->routes['POST'][$uri] = $action;
     }
 
+    public function route()
+    {
+        $segment = $_SERVER['REQUEST_URI'];
+        $segment = ltrim($segment, '/');
+        $segment = explode('/', $segment);
+
+        return $segment[1];
+    }
+
     public function dispatch()
     {
         $method = $_SERVER['REQUEST_METHOD'];
@@ -48,17 +57,5 @@ class Router
             }
         }
         
-
-        // $callback = $this->routes[$method][$uri] ?? null;
-
-
-        // if ($callback) {
-        //     [$controller, $method] = $callback;
-        //     $controller = new $controller();
-        //     call_user_func([$controller, $method]);
-        // } else {
-        //     http_response_code(404);
-        //     echo "404 Not Found";
-        // }
     }
 }

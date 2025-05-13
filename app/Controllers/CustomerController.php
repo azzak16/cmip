@@ -17,6 +17,10 @@ class CustomerController extends Controller
 
     public function __construct()
     {
+        if (!Auth::check()) {
+            $this->redirect('/cmip/login');
+        }
+        
         $this->customer = new Customer();
         $this->data = [
             'title' => 'Customer',

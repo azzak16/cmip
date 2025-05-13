@@ -8,18 +8,13 @@ class Auth
     public static function attempt($username, $password)
     {
         $userModel = new User();
-        $user = $userModel->findByUser($username);
-        
-        print_r($user);
-        die();
+        $user = $userModel->findByUser($username);      
 
-        if ($user && password_verify($password, $user['password'])) {
+        if ($user && password_verify($password, $user['PASSWORD'])) {
             $_SESSION['user'] = [
-                'id' => $user['id'],
-                'tenant_id' => $user['tenant_id'],
-                'name' => $user['name'],
-                'email' => $user['email'],
-                'role' => $user['role']
+                'NO_ID' => $user['NO_ID'],
+                'username' => $user['USERNAME'],
+                'role_id' => $user['role_id']
             ];
             return true;
         }

@@ -15,6 +15,10 @@ class ProductController extends Controller
 
     public function __construct()
     {
+        if (!Auth::check()) {
+            $this->redirect('/cmip/login');
+        }
+        
         $this->productModel = new Product();
     }
 

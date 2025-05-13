@@ -5,6 +5,7 @@ use App\Models\Images;
 use App\Models\Product;
 use App\Models\SalesOrder;
 use App\Models\SalesOrderItem;
+use App\Models\SPK;
 use Core\Controller;
 use Core\Validator;
 use Core\Auth;
@@ -14,9 +15,9 @@ use Core\Model;
 use Exception;
 use PDO;
 
-class SalesOrderController extends Controller
+class SPKController extends Controller
 {
-    private $sales_order;
+    private $spk;
     private $data;
 
     public function __construct()
@@ -25,27 +26,27 @@ class SalesOrderController extends Controller
             $this->redirect('/cmip/login');
         }
 
-        $this->sales_order = new SalesOrder();
+        $this->spk = new SPK();
         $this->data = [
-            'title' => 'Sales Order',
+            'title' => 'SPK',
         ];
     }
 
     public function index()
     {
-        $this->view('sales-order/index', $this->data, 'layouts/main');
+        $this->view('spk/index', $this->data, 'layouts/main');
     }
 
     public function ajaxList()
     {
         header('Content-Type: application/json');
-        echo json_encode($this->sales_order->all());
+        echo json_encode($this->spk->all());
     }
 
     public function data()
     {
-        $sales_orders = $this->sales_order->all();
-        echo json_encode(['data' => $sales_orders]);
+        $spk = $this->spk->spk();
+        echo json_encode(['data' => $spk]);
     }
 
     public function create()
@@ -59,23 +60,14 @@ class SalesOrderController extends Controller
         $db = Database::getInstance();
         $db->beginTransaction();
 
+        $date = date('Y-m-d', strtotime($_POST['order_date']));
+
+        $orde_number = $this->spk->number($date);
+        $production_code = $this->spk->code($_POST['customer_id'], $date);
+
         try {
 
-            $errors = Validator::validate($_POST, [
-                'customer_id' => 'required',
-                'karat_id' => 'required'
-            ]);
-    
-            if ($errors) {
-                throw new \Exception(json_encode($errors));
-            }
-            
-            $date = date('Y-m-d', strtotime($_POST['order_date']));
-
-            $orde_number = $this->sales_order->number($date);
-            $production_code = $this->sales_order->code($_POST['customer_id'], $date);
-
-            $so_id = $this->sales_order->insert([
+            $so_id = $this->spk->insert([
                 'customer_id' => $_POST['customer_id'],
                 'karat' => $_POST['karat_id'],
                 'production_code' => $_POST['production_code']?: $production_code,
@@ -161,6 +153,7 @@ class SalesOrderController extends Controller
 
             if (!empty($errors)) {
                 $respon = implode('<br>', $errors);
+                print_r($respon);
                 throw new Exception($respon);
             }
 
@@ -183,7 +176,7 @@ class SalesOrderController extends Controller
 
     public function edit($id)
     {
-        $result = $this->sales_order->raw(
+        $result = $this->spk->raw(
             "SELECT sales_orders.*, customers.CS_NAMA, customers.CS_KODE
                 FROM sales_orders
                 left join customers on sales_orders.customer_id = customers.NO_ID
@@ -191,14 +184,14 @@ class SalesOrderController extends Controller
         );
         $this->data['sales_orders'] = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $result = $this->sales_order->raw(
+        $result = $this->spk->raw(
             "SELECT *
                 FROM sales_order_items
                 WHERE sales_order_id = $id"
         );
         $this->data['sales_order_items'] = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $result = $this->sales_order->raw(
+        $result = $this->spk->raw(
             "SELECT *
                 FROM sales_order_images
                 WHERE sales_order_id = $id"
@@ -210,7 +203,7 @@ class SalesOrderController extends Controller
 
     public function print($id)
     {
-        $this->data['sales_order'] = $this->sales_order->find($id);
+        $this->data['sales_order'] = $this->spk->find($id);
 
         $this->view('sales-order/print', $this->data, 'layouts/main');
     }
@@ -224,15 +217,15 @@ class SalesOrderController extends Controller
         
         $date = date('Y-m-d', strtotime($_POST['order_date']));
         
-        $orde_number = $this->sales_order->number($date);
-        $production_code = $this->sales_order->code($_POST['customer_id'], $date);
+        $orde_number = $this->spk->number($date);
+        $production_code = $this->spk->code($_POST['customer_id'], $date);
 
         $deletedItems = json_decode($_POST['deleted_items'] ?? '[]', true);
         $deletedImages = json_decode($_POST['deleted_images'] ?? '[]', true);
 
         try {
             
-            $this->sales_order->update([
+            $this->spk->update([
                 'customer_id' => $_POST['customer_id'],
                 'karat' => $_POST['karat_id'],
                 'production_code' => $_POST['production_code']?:$production_code,
@@ -249,7 +242,7 @@ class SalesOrderController extends Controller
 
             // deleted items
             if (!empty($deletedItems)) {
-                $this->sales_order->raw("DELETE FROM sales_order_items WHERE id IN (" . implode(',', $deletedItems) . ") AND sales_order_id = $id");                
+                $this->spk->raw("DELETE FROM sales_order_items WHERE id IN (" . implode(',', $deletedItems) . ") AND sales_order_id = $id");                
             }
 
             foreach ($_POST['product_desc'] as $key => $value) {
@@ -297,10 +290,10 @@ class SalesOrderController extends Controller
             }
 
             if (!empty($deletedImages)) {
-                $stmt = $this->sales_order->raw("SELECT file_name FROM sales_order_images WHERE id IN (" . implode(',', $deletedImages) . ") AND sales_order_id = $id");
+                $stmt = $this->spk->raw("SELECT file_name FROM sales_order_images WHERE id IN (" . implode(',', $deletedImages) . ") AND sales_order_id = $id");
                 $filesToDelete = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-                $stmt = $this->sales_order->raw("DELETE FROM sales_order_images WHERE id IN (" . implode(',', $deletedImages) . ") AND sales_order_id = $id");
+                $stmt = $this->spk->raw("DELETE FROM sales_order_images WHERE id IN (" . implode(',', $deletedImages) . ") AND sales_order_id = $id");
 
                 $uploadDir = realpath(ROOT_PATH . 'public/images/so/') . '/';
                 foreach ($filesToDelete as $file) {
@@ -329,7 +322,7 @@ class SalesOrderController extends Controller
 
                 for ($i = 0; $i < $fileCount; $i++) {
 
-                    $stmt = $this->sales_order->raw("SELECT file_name FROM sales_order_images WHERE file_name = '" . $files['name'][$i] . "'  AND sales_order_id = $id");
+                    $stmt = $this->spk->raw("SELECT file_name FROM sales_order_images WHERE file_name = '" . $files['name'][$i] . "'  AND sales_order_id = $id");
                     $check = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
                     if (!$check) {
@@ -387,7 +380,7 @@ class SalesOrderController extends Controller
     public function delete($id)
     {
         try {
-            $this->sales_order->softDelete($id);
+            $this->spk->softDelete($id);
             echo json_encode(['status' => true, 'message' => 'Sales Order dihapus']);
         } catch (Exception $e) {
             http_response_code(500);
