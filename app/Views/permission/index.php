@@ -18,6 +18,7 @@ use Core\Env;
                     <table class="table table-sm" id="datatable">
                     <thead>
                         <tr>
+                            <th>Menu</th>
                             <th>Name</th>
                             <th>Description</th>
                             <th class="text-center">Aksi</th>
@@ -34,6 +35,9 @@ use Core\Env;
     var datatable = $('#datatable').DataTable({
         ajax: '<?= Env::get('BASE_URL') ?>/permission/data',
         columns: [
+            {
+                data: 'menu'
+            },
             {
                 data: 'name'
             },

@@ -62,10 +62,14 @@ class PermissionController extends Controller
 
         try {
 
-            $permission_id = $this->permission->insert([
-                'name' => $_POST['name'],
-                'description' => $_POST['description'],
-            ]);
+            foreach ($_POST['name'] as $key => $value) {
+                $permission_id = $this->permission->insert([
+                    'menu' => $_POST['menu'],
+                    'name' => $value,
+                    'description' => $_POST['description'],
+                ]);
+            }
+
 
             $db->commit();
             echo json_encode([

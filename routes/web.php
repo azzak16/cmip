@@ -54,8 +54,10 @@ $router->get('/role', [RoleController::class, 'index']);
 $router->get('/role/create', [RoleController::class, 'create']);
 $router->post('/role/store', [RoleController::class, 'store']);
 $router->get('/role/data', [RoleController::class, 'data']);
+$router->post('/role/permission/{id}', [RoleController::class, 'permission']);
 $router->get('/role/select', [RoleController::class, 'select']);
 $router->get('/role/edit/{id}', [RoleController::class, 'edit']);
+$router->get('/role/detail/{id}', [RoleController::class, 'detail']);
 $router->post('/role/update/{id}', [RoleController::class, 'update']);
 $router->post('/role/delete/{id}', [RoleController::class, 'delete']);
 

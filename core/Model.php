@@ -28,7 +28,7 @@ abstract class Model
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function insert(array $data)
+    public function insertId(array $data)
     {
         $columns = implode(',', array_keys($data));
         $placeholders = ':' . implode(', :', array_keys($data));
@@ -41,6 +41,16 @@ abstract class Model
         }
 
         return $this->db->lastInsertId();
+    }
+
+    public function insert(array $data)
+    {
+        $columns = implode(',', array_keys($data));
+        $placeholders = ':' . implode(', :', array_keys($data));
+
+        $stmt = $this->db->prepare("INSERT INTO {$this->table} ($columns) VALUES ($placeholders)");
+
+        return $stmt->execute($data);
     }
 
     public function update(array $data, $id,  $type = 'id')

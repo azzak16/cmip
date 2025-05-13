@@ -6,11 +6,11 @@ use PDO;
 
 class Permission extends Model
 {
-    protected $table = 'Permissions';
+    protected $table = 'permissions';
 
     public function all()
     {
-        $stmt = $this->db->prepare("SELECT * FROM {$this->table}");
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} order by menu asc");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

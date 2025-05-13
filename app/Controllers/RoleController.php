@@ -2,10 +2,12 @@
 namespace App\Controllers;
 
 use App\Models\Images;
+use App\Models\Permission;
 use App\Models\Product;
 use App\Models\SalesOrder;
 use App\Models\SalesOrderItem;
 use App\Models\Role;
+use App\Models\RolePermission;
 use Core\Controller;
 use Core\Validator;
 use Core\Auth;
@@ -112,11 +114,112 @@ class RoleController extends Controller
         $this->view('role/edit', $this->data, 'layouts/main');
     }
 
+    public function detail($id)
+    {
+
+        $role = $this->role->raw("select roles.id, roles.name, roles.description, permissions.name as per_name, permissions.menu as per_menu from roles 
+                                left join role_permission on role_permission.role_id = roles.id
+                                left join permissions on permissions.id = role_permission.permission_id
+                                where roles.id = $id
+                                order by permissions.name asc");
+
+        $role = $role->fetchAll(PDO::FETCH_ASSOC);
+
+        $data = [];
+        $menu = '';
+        foreach ($role as $key => $value) {
+            $data['id'] = $value['id'];
+            $data['name'] = $value['name'];
+            $data['description'] = $value['description'];
+            $menu = $value['per_menu'];
+            $data['menu'][] = $value['per_menu'];
+
+            if ($menu == $value['per_menu']) {
+                $data['menu']['aksi'][] = $value['per_name'];
+            }
+        }
+
+
+echo json_encode($data);
+die();
+
+// $role = $this->role->find($id, 'id', false);
+        $this->data['role'] = $role;
+
+        $permission = new Permission();
+
+        $permissions = $permission->all();
+
+        $data = [];
+        foreach ($permissions as $key => $value) {
+            $data[$value['menu']][] = $value['name'];
+        }
+
+        $this->data['permission'] = $data;
+
+        $this->view('role/detail', $this->data, 'layouts/main');
+    }
+
     public function print($id)
     {
         $this->data['role'] = $this->role->find($id);
 
         $this->view('role/print', $this->data, 'layouts/main');
+    }
+
+    public function permission($id)
+    {
+        
+        $db = Database::getInstance();
+        $db->beginTransaction();
+
+        $stmt = $this->role->raw("SELECT * FROM permissions WHERE menu = '" . $_POST['menu'] . "'  AND name = '" . $_POST['name'] . "'");
+        $check = $stmt->fetch(\PDO::FETCH_ASSOC);
+      
+        if (!$check) {
+            http_response_code(500);
+            echo json_encode([
+                'status' => false, 
+                'message' => 'Data tidak valid'
+            ]);
+            return;
+        }
+
+        try {
+
+            $rp = new RolePermission();
+
+            if ($_POST['active'] == 0) {
+                $rp->insert([
+                    'role_id' => $id,
+                    'permission_id' => $check['id']
+                ]);
+
+                $respon = [
+                    'status' => true, 
+                    'message' => 'Permission berhasil disimpan.',
+                    'aksi' => 'update'
+                ];
+            }else{
+                $rp->raw("DELETE FROM role_permission WHERE role_id = $id AND permission_id = ".$check['id']);
+                $respon = [
+                    'status' => true, 
+                    'message' => 'Permission berhasil dihapus.',
+                    'aksi' => 'delete'
+                ];
+            }
+
+            $db->commit();
+            echo json_encode($respon, JSON_UNESCAPED_SLASHES);
+
+        } catch (Exception $e) {
+            $db->rollBack();
+            http_response_code(500);
+            echo json_encode([
+                'status' => false, 
+                'message' => $e->getMessage()
+            ]);
+        }
     }
     
 

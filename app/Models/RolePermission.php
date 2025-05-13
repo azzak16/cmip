@@ -6,6 +6,6 @@ use PDO;
 
 class RolePermission extends Model
 {
-    protected $table = 'roles';
+    protected $table = 'role_permission';
 
 }

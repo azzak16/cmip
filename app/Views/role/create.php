@@ -15,15 +15,16 @@ use Core\Env;
         
                         <div class="row">
         
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-12">
                                 <label class="col-form-label col-form-label-sm" for="name">Nama</label>
                                 <input type="text" name="name" id="name" class="form-control form-control-sm">
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-12">
                                 <label class="col-form-label col-form-label-sm col-md-6" style="margin-left: -15px" for="description">Deskripsi</label>
                                 <textarea class="form-control" name="description" id="description"></textarea>
                             </div>
+
                         </div>
         
                         <button type="submit" class="btn btn-primary mt-3 col-md-6 float-right">Simpan</button>

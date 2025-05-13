@@ -15,12 +15,31 @@ use Core\Env;
         
                         <div class="row">
         
-                            <div class="form-group col-md-6">
-                                <label class="col-form-label col-form-label-sm" for="name">Name</label>
-                                <input type="text" name="name" id="name" class="form-control form-control-sm">
+                            <div class="form-group col-md-12">
+                                <label class="col-form-label col-form-label-sm" for="menu">Menu</label>
+                                <input type="text" name="menu" id="menu" class="form-control form-control-sm">
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-12">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="name[]" value="detail">
+                                    <label class="form-check-label" for="inlineCheckbox1">Detail</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="name[]" value="create">
+                                    <label class="form-check-label" for="inlineCheckbox2">Create</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="name[]" value="edit">
+                                    <label class="form-check-label" for="inlineCheckbox2">Edit</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="name[]" value="delete">
+                                    <label class="form-check-label" for="inlineCheckbox2">Delete</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12">
                                 <label class="col-form-label col-form-label-sm" for="description">Description</label>
                                 <textarea class="form-control" name="description" id="description"></textarea>
                             </div>

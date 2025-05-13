@@ -13,6 +13,6 @@ class DashboardController extends Controller
             $this->redirect('/cmip/login');
         }
 
-        $this->view('Dashboard/index', ['title' => 'Dashboard'], 'layouts/main');
+        $this->view('dashboard/index', ['title' => 'Dashboard'], 'layouts/main');
     }
 }

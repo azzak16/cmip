@@ -47,7 +47,7 @@ use Core\Env;
 
                     var html = `<div>
                                     <a href="<?= Env::get('BASE_URL') ?>/role/edit/${row.id}" class="btn btn-sm btn-outline-info btn-edit" ><i class="fas fa-pencil"></i></a>
-                                    <a href="<?= Env::get('BASE_URL') ?>/role/view/${row.id}" class="btn btn-sm btn-outline-warning btn-view" ><i class="fas fa-eye"></i></a>
+                                    <a href="<?= Env::get('BASE_URL') ?>/role/detail/${row.id}" class="btn btn-sm btn-outline-warning btn-view" ><i class="fas fa-eye"></i></a>
                                     <a class="btn btn-sm btn-outline-danger btn-delete" data-id="${row.id}"><i class="fas fa-trash"></i></a>
                                 </div>`;
 
