@@ -3,11 +3,6 @@ namespace Core;
 
 class Controller
 {
-    // public function view($path, $data = [])
-    // {
-    //     extract($data);
-    //     require_once __DIR__ . '/../app/Views/' . $path . '.php';
-    // }
 
     public function redirect($url)
     {

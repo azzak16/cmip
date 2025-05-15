@@ -2,6 +2,7 @@
 namespace Core;
 
 use App\Models\User;
+use Exception;
 
 class Auth
 {
@@ -16,10 +17,14 @@ class Auth
                 'username' => $user['USERNAME'],
                 'role_id' => $user['role_id']
             ];
+            $_SESSION['login_time'] = time();
+            $_SESSION['expire_time'] = 10;
             return true;
         }
 
-        return false;
+        throw new Exception("Username atau password salah!");
+
+        // return false;
     }
 
     public static function user()
@@ -29,6 +34,16 @@ class Auth
 
     public static function check()
     {
+        if (isset($_SESSION['user'])) {
+            if (time() - $_SESSION['login_time'] > $_SESSION['expire_time']) {
+                // Waktu sesi habis
+                Auth::logout();
+            } else {
+                // Perbarui waktu login agar terus aktif saat user aktif
+                $_SESSION['login_time'] = time();
+            }
+        }
+
         return isset($_SESSION['user']);
     }
 
