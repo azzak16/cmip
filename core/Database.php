@@ -17,9 +17,9 @@ class Database
         if (self::$instance === null) {
             try {
                 self::$instance = new PDO(
-                    'mysql:host=' . Env::get('DB_HOST') . ';dbname=' . Env::get('DB_NAME') . ';charset=utf8mb4',
-                    Env::get('DB_USER'),
-                    Env::get('DB_PASS'),
+                    'mysql:host=' . Config::get('DB_HOST') . ';dbname=' . Config::get('DB_NAME') . ';charset=utf8mb4',
+                    Config::get('DB_USER'),
+                    Config::get('DB_PASS'),
                     [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
                 );
             } catch (PDOException $e) {

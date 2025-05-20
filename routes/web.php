@@ -78,6 +78,7 @@ $router->post('/user/store', [UserController::class, 'store']);
 $router->get('/user/data', [UserController::class, 'data']);
 $router->get('/user/select', [UserController::class, 'select']);
 $router->get('/user/edit/{id}', [UserController::class, 'edit']);
+$router->get('/user/setting/{id}', [UserController::class, 'setting']);
 $router->post('/user/update/{id}', [UserController::class, 'update']);
 $router->post('/user/delete/{id}', [UserController::class, 'delete']);
 

@@ -184,21 +184,19 @@ class UserController extends Controller
         );
         $this->data['users'] = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $result = $this->user->raw(
-            "SELECT *
-                FROM user_items
-                WHERE user_id = $id"
-        );
-        $this->data['user_items'] = $result->fetchAll(PDO::FETCH_ASSOC);
-
-        $result = $this->user->raw(
-            "SELECT *
-                FROM user_images
-                WHERE user_id = $id"
-        );
-        $this->data['user_images'] = $result->fetchAll(PDO::FETCH_ASSOC);
-
         $this->view('user/edit', $this->data, 'layouts/main');
+    }
+
+    public function setting($id)
+    {
+        $result = $this->user->raw(
+            "SELECT users.*
+                FROM users
+                WHERE users.NO_ID = $id"
+        );
+        $this->data['users'] = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $this->view('user/setting', $this->data, 'layouts/main');
     }
 
     public function print($id)

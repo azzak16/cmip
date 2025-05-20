@@ -37,7 +37,7 @@ use Core\Env;
         <i class="fas fa-user"></i> 
       </button>
       <div class="dropdown-menu dropdown-menu-md-right">
-        <a class="dropdown-item" href="<?= Env::get('BASE_URL') ?>/edit/<?= $_SESSION['user']['NO_ID'] ?>">Setting</a>
+        <a class="dropdown-item" href="<?= Env::get('BASE_URL') ?>/user/setting/<?= $_SESSION['user']['NO_ID'] ?>">Setting</a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="<?= Env::get('BASE_URL') ?>/logout">Log Out</a>
       </div>
