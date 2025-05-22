@@ -18,7 +18,7 @@ class Auth
                 'role_id' => $user['role_id']
             ];
             $_SESSION['login_time'] = time();
-            $_SESSION['expire_time'] = 3600;
+            $_SESSION['expire_time'] = 10800;
             return true;
         }
 
